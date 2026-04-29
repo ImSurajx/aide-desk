@@ -1,14 +1,15 @@
 import nodemailer from "nodemailer";
+import { config } from "../config/config.js";
 
 // Create a transporter using Gmail and OAuth2 authentication
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     type: "OAuth2",
-    user: process.env.GOOGLE_USER,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-    clientId: process.env.GOOGLE_CLIENT_ID,
+    user: config.GOOGLE_USER_EMAIL,
+    clientSecret: config.GOOGLE_CLIENT_SECRET,
+    refreshToken: config.GOOGLE_REFRESH_TOKEN,
+    clientId: config.GOOGLE_CLIENT_ID,
   },
 });
 
@@ -17,19 +18,24 @@ transporter.verify((error, success) => {
   if (error) {
     console.error("Error connecting to email server:", error);
   } else {
-    console.log("Email server is ready to send messages");
+    console.log("📧 Email server is ready to send messages");
   }
 });
 
 export async function sendEmail({ to, subject, html, text }) {
-  const mailOptions = {
-    from: process.env.GOOGLE_USER,
-    to,
-    subject,
-    html,
-    text,
-  };
+  try {
+    const info = await transporter.sendMail({
+      from: `"AideDesk Team" <${config.GOOGLE_USER_EMAIL}>`, // sender address
+      to, // list of receivers
+      subject, // Subject line
+      text, //plain text body
+      html, // html body
+    });
 
-  const details = await transporter.sendMail(mailOptions);
-  console.log("Email sent:", details);
+    console.log("Email sent:", info.messageId);
+    return true;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return false;
+  }
 }

@@ -3,17 +3,26 @@ import mongoose from "mongoose";
 import { config } from "./config.js";
 
 // ============================================
-// Database Connection
+// Database Connection & diconnection functions
 // ============================================
-const connectToDB = async () =>{
+const connectToDB = async () => {
   try {
-    const conn = await mongoose.connect(config.MONGO_URI)
+    const conn = await mongoose.connect(config.MONGO_URI);
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  }catch (error) {
+  } catch (error) {
     console.error("❌ MongoDB connection error:", error.message);
     throw error;
   }
-}
+};
 
-// ============================================
-export default connectToDB;
+const disconnectDB = async () => {
+  try {
+    await mongoose.disconnect();
+    console.log("✅ MongoDB Disconnected");
+  } catch (error) {
+    console.error("❌ Disconnect Error:", error.message);
+    process.exit(1);
+  }
+};
+
+export { connectToDB, disconnectDB };

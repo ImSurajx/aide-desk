@@ -1,5 +1,5 @@
 import app from "./src/app.js";
-import connectToDB from "./src/config/database.js";
+import { connectToDB, disconnectDB } from "./src/config/database.js";
 import http from "http";
 import { initSocket } from "./src/sockets/server.socket.js";
 

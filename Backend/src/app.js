@@ -11,7 +11,7 @@ import authRoutes from "./routes/auth.routes.js";
 // ============================================
 // Import Middleware & Error Handlers
 // ============================================
-// import { errorHandler, notFoundHandler } from "./utils/errorHandler.js";
+import { errorHandler, notFoundHandler } from "./utils/errorHandler.js";
 
 // ============================================
 // Initialize Express App
@@ -30,7 +30,8 @@ const app = express();
 app.use(
   cors({
     origin:
-      process.env.CLIENT_URL || `http://localhost:${process.env.Frontend_PORT}`,
+      process.env.FRONTEND_URL ||
+      `http://localhost:${process.env.FRONTEND_PORT}`,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -83,7 +84,7 @@ app.get("/api/health", (req, res) => {
 // API Routes
 // ============================================
 
-// app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 // ============================================
 // Error Handling & 404
@@ -94,7 +95,7 @@ app.get("/api/health", (req, res) => {
  * - Catches all undefined routes
  * - Must be before error handler
  */
-// app.use(notFoundHandler);
+app.use(notFoundHandler);
 
 /**
  * Global Error Handler
@@ -102,6 +103,6 @@ app.get("/api/health", (req, res) => {
  * - Formats error responses consistently
  * - Logs errors for debugging
  */
-// app.use(errorHandler);
+app.use(errorHandler);
 
 export default app;

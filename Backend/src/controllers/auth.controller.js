@@ -5,8 +5,8 @@ import { AppError, asyncHandler } from "../utils/errorHandler.js";
 import { generateToken } from "../utils/tokens.js";
 import { sendVerificationEmail } from "../utils/email.js";
 import { config } from "../config/config.js";
-
-const recieverEmail = "huzaifaquadri1853@gmail.com";
+import { getVerificationHTML } from "../utils/verificationTemplate.js";
+import jwt from "jsonwebtoken";
 
 // ============================================
 // Register User
@@ -45,8 +45,8 @@ export const registerController = asyncHandler(async (req, res) => {
 
   const sent = await sendVerificationEmail({
     // email: user.email,
-    email: recieverEmail, //for now; will send mail only on this email as dummy emails will be used in testing
-    name: user.name,
+    email: config.TEST_RECIEVER_EMAIL, //for now; will send mail only on this email as dummy emails will be used in testing
+    name: user.fullName,
     verificationLink:
       process.env.backendURL ||
       `http://localhost:${config.PORT}/api/auth/verify/${token}`,
@@ -58,66 +58,59 @@ export const registerController = asyncHandler(async (req, res) => {
   }
 });
 
-////////////////////////
-// export async function registerController(req, res) {
-//   const { email, password, fullName, role } = req.body;
+export const verifyEmailToken = async (req, res, next) => {
+  const { token } = req.params;
 
-//   try {
-//     // Check if user already exists
-//     const isUsrAlreadyExist = await userModel.findOne({
-//       email,
-//     });
-//     if (isUsrAlreadyExist) {
-//       return res.status(HTTP_STATUS.CONFLICT).json({
-//         message: "User already exists",
-//         success: false,
-//         error: ERROR_MESSAGES.USER_EXISTS,
-//       });
-//     }
+  try {
+    const decoded = jwt.verify(token, config.JWT_SECRET);
 
-//     // Create new user
-//     const user = await userModel.create({
-//       email,
-//       password,
-//       fullName,
-//       role: role || "admin",
-//     });
+    const user = await userModel.findOne({ email: decoded.email });
 
-//     // Generate email verification token
-//     const emailVerificationToken = jwt.sign(
-//       {
-//         email: user.email,
-//       },
-//       process.env.JWT_SECRET,
-//     );
-//     // Send verification email
-//     await sendEmail({
-//       to: email,
-//       subject: "Welcome to AideDesk - Please Verify Your Email",
-//       text: `Welcome ${fullName}`,
-//       html: `<h2>Welcome to AideDesk</h2>
-//           <p>Hi ${fullName},</p>
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(
+          getVerificationHTML(
+            "User Not Found",
+            "The account associated with this verification link does not exist.",
+            false,
+          ),
+        );
+    }
 
-//           <p>
-//           Thanks for registering. Your account has been successfully created.
-//           </p>
+    if (user.isVerified) {
+      return res
+        .status(HTTP_STATUS.OK)
+        .send(
+          getVerificationHTML(
+            "Account Already Verified",
+            "Your account has already been verified. You can proceed to log in.",
+            true,
+          ),
+        );
+    }
 
-//           <p>
-//           Please verify your email address by clicking the link below: <a href="http://localhost:3000/api/auth/verify-email?token=${emailVerificationToken}"
-//            >
-//            Verify Email
-//           </a>
-//           </p>
+    user.isVerified = true;
+    await user.save();
 
-//           <hr/>
-//           <p>AideDesk Team</p>`,
-//     });
-
-//     await sendTokenResponse(user, res, "User Register Successfully");
-//   } catch (err) {
-//     console.log(err);
-//     return res
-//       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-//       .json({ message: "Server error" });
-//   }
-// }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(
+        getVerificationHTML(
+          "Account Verified!",
+          "Your email has been successfully verified. You can now access all features of your account.",
+          true,
+        ),
+      );
+  } catch (error) {
+    return res
+      .status(HTTP_STATUS.UNAUTHORIZED)
+      .send(
+        getVerificationHTML(
+          "Invalid or Expired Link",
+          "The verification link is invalid or has expired. Please request a new one.",
+          false,
+        ),
+      );
+  }
+};

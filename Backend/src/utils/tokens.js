@@ -12,13 +12,21 @@ export const generateToken = (res, userId, email, role, companyId = null) => {
   return token;
 };
 
-// Short-lived token (15 min) used only for password reset links — never stored in cookies
-export const generateResetToken = (userId) => {
-  return jwt.sign(
-    { userId, purpose: 'password-reset' },
+export const regenerateToken = (res, userId, email, role, companyId) => {
+  const token = jwt.sign(
+    { userId, email, role, companyId },
     config.JWT_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: config.JWT_EXPIRE || '5d' }
   );
+  setTokenInCookies(res, token);
+  return token;
+};
+
+// Short-lived token (15 min) used only for password reset links — never stored in cookies
+export const generateResetToken = userId => {
+  return jwt.sign({ userId, purpose: 'password-reset' }, config.JWT_SECRET, {
+    expiresIn: '15m'
+  });
 };
 
 const setTokenInCookies = (res, token) => {
@@ -26,6 +34,6 @@ const setTokenInCookies = (res, token) => {
     httpOnly: true,
     secure: config.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
   });
 };

@@ -7,6 +7,11 @@ import morgan from 'morgan';
 // Import Routes
 // ============================================
 import authRoutes from './routes/auth.routes.js';
+import companyRoutes from './routes/company.routes.js';
+import agentRoutes from './routes/agent.routes.js';
+import userRoutes from './routes/user.routes.js';
+// import ticketRoutes from './routes/ticket.routes.js';
+import messageRoutes from './routes/message.routes.js';
 
 // ============================================
 // Import Middleware & Error Handlers
@@ -85,6 +90,11 @@ app.get('/api/health', (req, res) => {
 // ============================================
 
 app.use('/api/auth', authRoutes);
+app.use('/api/company', companyRoutes);
+app.use('/api/agents', agentRoutes);
+app.use('/api/users', userRoutes);
+// app.use('/api/tickets', ticketRoutes);
+app.use('/api/messages', messageRoutes);
 
 // ============================================
 // Error Handling & 404

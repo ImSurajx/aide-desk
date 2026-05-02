@@ -8,13 +8,13 @@ import {
   updateAgent,
   deleteAgent,
   updateOwnStatus,
-  changePassword,
+  changePassword
 } from '../controllers/agent.controller.js';
 
 import {
   registerAgentValidator,
   updateAgentValidator,
-  changePasswordValidator,
+  changePasswordValidator
 } from '../validator/agent.validator.js';
 import { validate } from '../middleware/validation.middleware.js';
 import { protect, requireRole } from '../middleware/auth.middleware.js';
@@ -38,7 +38,13 @@ router.patch('/status', requireRole('agent'), updateOwnStatus);
  * @desc    Agent changes their own password — requires current password
  * @access  Private — Agent only (own account)
  */
-router.patch('/:id/password', requireRole('agent'), changePasswordValidator, validate, changePassword);
+router.patch(
+  '/:id/password',
+  requireRole('agent'),
+  changePasswordValidator,
+  validate,
+  changePassword
+);
 
 // ============================================
 // Admin manages agents (admin role)
@@ -49,14 +55,20 @@ router.patch('/:id/password', requireRole('agent'), changePasswordValidator, val
  * @desc    Admin creates a new agent for their company
  * @access  Private — Admin only
  */
-router.post('/', requireRole('admin'), registerAgentValidator, validate, createAgent);
+router.post(
+  '/register',
+  requireRole('admin'),
+  registerAgentValidator,
+  validate,
+  createAgent
+);
 
 /**
  * @route   GET /api/agents
  * @desc    Admin lists all agents in their company (supports ?status=online&page=1&limit=20)
  * @access  Private — Admin only
  */
-router.get('/', requireRole('admin'), getAgents);
+router.get('/getAll', requireRole('admin'), getAgents);
 
 // ============================================
 // Shared — Admin or Agent (own profile)
@@ -74,7 +86,13 @@ router.get('/:id', requireRole('admin', 'agent'), getAgent);
  * @desc    Update agent — admin can change all fields; agent limited to name/image/status
  * @access  Private — Admin or Agent
  */
-router.patch('/:id', requireRole('admin', 'agent'), updateAgentValidator, validate, updateAgent);
+router.patch(
+  '/:id',
+  requireRole('admin', 'agent'),
+  updateAgentValidator,
+  validate,
+  updateAgent
+);
 
 /**
  * @route   DELETE /api/agents/:id

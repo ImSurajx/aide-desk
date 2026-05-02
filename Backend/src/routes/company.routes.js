@@ -5,14 +5,14 @@ const router = Router();
 // Import Validators
 // ============================================
 import {
-  registerCompanyValidator,
-  loginCompanyValidator
+  updateCompanyValidator,
+  createCompanyValidator
 } from '../validator/company.validator.js';
 
 // ============================================
 // Import Middlewares
 // ============================================
-import { authenticateAdmin } from '../middleware/auth.middleware.js';
+import { protect } from '../middleware/auth.middleware.js';
 
 // ============================================
 // Import Controllers
@@ -37,28 +37,33 @@ import {
  * @desc    Register a new company (admin only)
  * @access  Private — admin
  */
-router.post('/register', registerCompanyValidator, registerCompanyController);
+router.post(
+  '/register',
+  protect,
+  createCompanyValidator,
+  registerCompanyController
+);
 
 /**
  * @route   GET /api/company/:id
  * @desc    Get a company by ID
  * @access  Private — admin
  */
-router.get('/:id', authenticateAdmin, getCompanyController);
+router.get('/:id', protect, getCompanyController);
 
 /**
  * @route   PUT /api/company/:id
  * @desc    Update company details
  * @access  Private — admin
  */
-router.put('/:id', authenticateAdmin, updateCompanyController);
+router.put('/:id', protect, updateCompanyValidator, updateCompanyController);
 
 /**
  * @route   DELETE /api/company/:id
  * @desc    Delete a company
  * @access  Private — admin
  */
-router.delete('/:id', authenticateAdmin, deleteCompanyController);
+router.delete('/:id', protect, deleteCompanyController);
 
 // ============================================
 // ── Company Data Routes (users / agents / tickets / messages)
@@ -70,36 +75,28 @@ router.delete('/:id', authenticateAdmin, deleteCompanyController);
  * @desc    Get all users belonging to a company
  * @access  Private — admin
  */
-router.get('/:companyId/users', authenticateAdmin, getCompanyUsersController);
+router.get('/:companyId/users', protect, getCompanyUsersController);
 
 /**
  * @route   GET /api/company/:companyId/agents
  * @desc    Get all agents assigned to a company
  * @access  Private — admin
  */
-router.get('/:companyId/agents', authenticateAdmin, getCompanyAgentsController);
+router.get('/:companyId/agents', protect, getCompanyAgentsController);
 
 /**
  * @route   GET /api/company/:companyId/tickets
  * @desc    Get all tickets raised under a company
  * @access  Private — admin
  */
-router.get(
-  '/:companyId/tickets',
-  authenticateAdmin,
-  getCompanyTicketsController
-);
+router.get('/:companyId/tickets', protect, getCompanyTicketsController);
 
 /**
  * @route   GET /api/company/:companyId/messages
  * @desc    Get all messages under a company
  * @access  Private — admin
  */
-router.get(
-  '/:companyId/messages',
-  authenticateAdmin,
-  getCompanyMessagesController
-);
+router.get('/:companyId/messages', protect, getCompanyMessagesController);
 
 // ============================================
 // Export Router

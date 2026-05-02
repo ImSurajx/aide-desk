@@ -15,12 +15,13 @@ import messageModel from '../models/message.model.js';
 import { AppError, asyncHandler } from '../utils/errorHandler.js';
 import { HTTP_STATUS } from '../config/constants.js';
 import { config } from '../config/config.js';
+import { regenerateToken } from '../utils/tokens.js';
 
 // ============================================
 // Register Company
 // ============================================
 /**
- * @desc   Register a new company and link it to the authenticated admin.
+ * @desc Register a new company and link it to the authenticated admin.
  *         Also auto-creates a workspace for the company.
  *
  * Flow:
@@ -79,14 +80,17 @@ export const registerCompanyController = asyncHandler(async (req, res) => {
     country,
     branding,
     plan,
-    adminId: req.admin._id, // set server-side from auth middleware
+    adminId: req.userId, // set server-side from auth middleware
     workSpaceId: null // can be linked after workspace creation
   });
 
   // ── 3. Link company back to the admin ─────────────────────────────────────────
-  // await adminModel.findByIdAndUpdate(req.admin._id, {
-  //   companyId: company._id
-  // });
+  await adminModel.findByIdAndUpdate(req.userId, {
+    companyId: company._id
+  });
+
+  // Regenerate the auth token to include the new company ID
+  regenerateToken(res, req.userId, req.user.email, req.role, company._id);
 
   if (config.NODE_ENV === 'development') {
     console.log(
@@ -213,7 +217,7 @@ export const deleteCompanyController = asyncHandler(async (req, res) => {
  * @access Private — admin
  */
 export const getCompanyUsersController = asyncHandler(async (req, res) => {
-  const companyId = req.admin.companyId;
+  const companyId = req.params.companyId;
   const users = await userModel.find({ companyId: companyId }).select('-__v');
 
   res.status(HTTP_STATUS.OK).json({
@@ -233,7 +237,7 @@ export const getCompanyUsersController = asyncHandler(async (req, res) => {
  * @access Private — admin
  */
 export const getCompanyAgentsController = asyncHandler(async (req, res) => {
-  const companyId = req.admin.companyId;
+  const companyId = req.params.companyId;
   const agents = await agentModel
     .find({ companyId: companyId })
     .select('-password -__v');
@@ -255,7 +259,7 @@ export const getCompanyAgentsController = asyncHandler(async (req, res) => {
  * @access Private — admin
  */
 export const getCompanyTicketsController = asyncHandler(async (req, res) => {
-  const companyId = req.admin.companyId;
+  const companyId = req.params.companyId;
   const tickets = await ticketModel
     .find({ companyId: companyId })
     .populate('createdBy', 'name email')
@@ -283,7 +287,7 @@ export const getCompanyTicketsController = asyncHandler(async (req, res) => {
  * @access Private — admin
  */
 export const getCompanyMessagesController = asyncHandler(async (req, res) => {
-  const companyId = req.admin.companyId;
+  const companyId = req.params.companyId;
 
   const chats = await chatModel.find({ company: companyId }).select('_id');
 

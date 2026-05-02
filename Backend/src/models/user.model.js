@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const agentSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -27,10 +27,11 @@ const agentSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ['agent'],
-      default: 'agent'
+      enum: ['customer'],
+      default: 'customer'
     },
 
+    // Scopes this customer to a specific company's support portal
     companyId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'company',
@@ -54,23 +55,23 @@ const agentSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ['online', 'offline', 'away'],
+      enum: ['online', 'offline'],
       default: 'offline'
     }
   },
   { timestamps: true }
 );
 
-agentSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-agentSchema.methods.comparePassword = function (candidatePassword) {
+userSchema.methods.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-const agentModel = mongoose.model('agent', agentSchema);
+const userModel = mongoose.model('user', userSchema);
 
-export default agentModel;
+export default userModel;

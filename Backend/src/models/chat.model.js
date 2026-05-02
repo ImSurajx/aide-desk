@@ -5,25 +5,46 @@ const chatSchema = new mongoose.Schema(
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'company',
-      required: [true, 'Company is require']
+      required: [true, 'Company is required']
     },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-      required: [true, 'User is require']
+      required: [true, 'User is required']
     },
-    isOpen: {
-      type: Boolean,
-      default: true
+
+    // Assigned when an agent joins or when escalated
+    assignedAgent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'agent',
+      default: null
     },
+
+    // Populated when this chat is escalated to a formal ticket
+    ticket: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ticket',
+      default: null
+    },
+
+    status: {
+      type: String,
+      enum: ['active', 'waiting', 'closed'],
+      default: 'active'
+    },
+
     messageCount: {
       type: Number,
       default: 0
     },
+
     latestMessage: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'message'
+      ref: 'message',
+      default: null
     },
+
     lastActivity: {
       type: Date,
       default: Date.now

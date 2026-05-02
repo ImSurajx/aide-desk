@@ -5,21 +5,71 @@ const messageSchema = new mongoose.Schema(
     chat: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'chat',
-      required: [true, 'Chat is require']
+      required: [true, 'Chat is required']
     },
+
     content: {
       type: String,
-      required: [true, 'Content is require']
+      required: [true, 'Content is required'],
+      trim: true,
+      maxlength: [5000, 'Message cannot exceed 5000 characters']
     },
+
+    // 'user' = customer, 'agent' = human agent, 'ai' = AI-generated
     role: {
       type: String,
       enum: ['user', 'agent', 'ai'],
-      required: [true, 'Role is require']
+      required: [true, 'Role is required']
     },
-    agent: {
-      type: this.role === 'agent' ? mongoose.Schema.Types.ObjectId : 'ai',
-      ref: this.role === 'agent' ? 'agent' : 'ai'
-    }
+
+    // Populated only when role is 'user' or 'agent'; null for AI messages
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null
+    },
+
+    senderModel: {
+      type: String,
+      enum: ['user', 'agent'],
+      default: null
+    },
+
+    isRead: {
+      type: Boolean,
+      default: false
+    },
+
+    attachments: [
+      {
+        url: { type: String, required: true },
+        filename: { type: String, required: true },
+        mimetype: { type: String, required: true }
+      }
+    ],
+
+    // AI engine output: frustration score 1 (calm) – 5 (very frustrated)
+    sentimentScore: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: null
+    },
+
+    // AI intent classification result
+    intentLabel: {
+      type: String,
+      enum: ['simple_faq', 'billing_issue', 'technical_problem', 'escalate_human', 'feedback'],
+      default: null
+    },
+
+    // 3 co-pilot reply suggestions surfaced in the agent sidebar
+    aiSuggestions: [
+      {
+        tone: { type: String },
+        reply: { type: String },
+        confidence: { type: String, enum: ['high', 'medium', 'low'] }
+      }
+    ]
   },
   { timestamps: true }
 );

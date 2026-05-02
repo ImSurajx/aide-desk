@@ -4,33 +4,37 @@ const companySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Company name is require'],
+      required: [true, 'Company name is required'],
       trim: true,
-      minlength: [2, 'Name must be at least 2 characters long']
+      minlength: [2, 'Name must be at least 2 characters long'],
+      maxlength: [100, 'Name cannot exceed 100 characters']
     },
 
     slug: {
       type: String,
-      required: [true, 'Slug is require'],
-      unique: [true, 'Slug should be unique'],
-      lowercase: [true, 'Slug should be in lowercase'],
-      trim: [true, 'Slug should not be in trim']
+      required: [true, 'Slug is required'],
+      unique: [true, 'Slug must be unique'],
+      lowercase: true,
+      trim: true
     },
 
     email: {
       type: String,
-      required: [true, 'Email is require'],
-      lowercase: [true, 'Email should be in lowercase']
+      required: [true, 'Email is required'],
+      lowercase: true,
+      trim: true
     },
 
+    // String — not Number — to support international formats like +92-300-1234567
     phone: {
-      type: Number,
-      required: [true, 'Phone Number is require']
+      type: String,
+      required: [true, 'Phone number is required'],
+      trim: true
     },
 
     website: {
       type: String,
-      required: [true, 'Website url is require'],
+      required: [true, 'Website URL is required'],
       trim: true
     },
 
@@ -42,35 +46,44 @@ const companySchema = new mongoose.Schema(
 
     size: {
       type: String,
-      required: [true, 'size is require']
+      enum: ['1-10', '11-50', '51-200', '201-500', '500+'],
+      required: [true, 'Company size is required']
     },
 
     address: {
       type: String,
-      required: [true, 'Address is require'],
+      required: [true, 'Address is required'],
       trim: true
     },
 
     country: {
       type: String,
-      required: [true, 'Country is require'],
+      required: [true, 'Country is required'],
       trim: true
     },
 
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'admin',
-      required: [true, 'Owner is require']
+      required: [true, 'Owner is required']
     },
+
     workSpaceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'workspace',
-      required: [true, 'Workspace is require']
+      required: [true, 'Workspace is required']
+    },
+
+    // Custom branding for multi-tenant white-labeling
+    branding: {
+      logo: { type: String, default: '' },
+      primaryColor: { type: String, default: '#2563eb' },
+      secondaryColor: { type: String, default: '#64748b' }
     },
 
     status: {
       type: String,
-      enum: ['active', 'inactive'],
+      enum: ['active', 'inactive', 'suspended'],
       default: 'active'
     },
 
@@ -80,10 +93,8 @@ const companySchema = new mongoose.Schema(
       default: 'free'
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 const companyModel = mongoose.model('company', companySchema);
-module.exports = companyModel;
+export default companyModel;

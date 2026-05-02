@@ -42,6 +42,13 @@ const adminSchema = mongoose.Schema(
       type: String,
       enum: ['online', 'offline', 'away'],
       default: 'online'
+    },
+
+    // Populated after the admin creates their company during onboarding
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'company',
+      default: null
     }
   },
   { timestamps: true }

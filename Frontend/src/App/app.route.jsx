@@ -14,6 +14,7 @@ import Product from "../pages/Product";
 import Demo from "../pages/Demo";
 import Docs from "../pages/Docs";
 import VerifyEmail from "../pages/VerifyEmail";
+import ProtectedRoute from "../components/ui/ProtectedRoute";
 
 const RootLayout = () => (
   <>
@@ -40,6 +41,14 @@ const AppRoutes = createBrowserRouter([
       { path: "/demo", element: <Demo /> },
       { path: "/docs", element: <Docs /> },
       { path: "/verify-email", element: <VerifyEmail /> },
+      // {
+      //   path: "/onboarding",
+      //   element: (
+      //     <ProtectedRoute>
+      //       <Onboarding />
+      //     </ProtectedRoute>
+      //   ),
+      // },
     ],
   },
 ]);

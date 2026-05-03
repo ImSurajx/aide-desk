@@ -1,69 +1,41 @@
-import axios from "axios";
+import apiClient from "../../../lib/axios";
 
-const agentAPI = axios.create({
-  baseURL: "/api/agents",
-  withCredentials: true,
-});
+const PREFIX = "/agents";
 
-/**
- * PATCH /api/agents/status
- * Agent updates their own online/offline/away status
- */
 export const updateOwnStatus = async (statusData) => {
-  const response = await agentAPI.patch("/status", statusData);
+  const response = await apiClient.patch(`${PREFIX}/status`, statusData);
   return response.data;
 };
 
-/**
- * PATCH /api/agents/:id/password
- * Agent changes their own password
- */
 export const changePassword = async ({ id, ...passwordData }) => {
-  const response = await agentAPI.patch(`/${id}/password`, passwordData);
+  const response = await apiClient.patch(
+    `${PREFIX}/${id}/password`,
+    passwordData
+  );
   return response.data;
 };
 
-/**
- * POST /api/agents/register
- * Admin creates a new agent
- */
 export const createAgent = async (agentData) => {
-  const response = await agentAPI.post("/register", agentData);
+  const response = await apiClient.post(`${PREFIX}/register`, agentData);
   return response.data;
 };
 
-/**
- * GET /api/agents/getAll
- * Admin lists all agents
- */
 export const getAgents = async (params) => {
-  const response = await agentAPI.get("/getAll", { params });
+  const response = await apiClient.get(`${PREFIX}/getAll`, { params });
   return response.data;
 };
 
-/**
- * GET /api/agents/:id
- * Get a single agent
- */
 export const getAgent = async (id) => {
-  const response = await agentAPI.get(`/${id}`);
+  const response = await apiClient.get(`${PREFIX}/${id}`);
   return response.data;
 };
 
-/**
- * PATCH /api/agents/:id
- * Update agent
- */
 export const updateAgent = async ({ id, ...updateData }) => {
-  const response = await agentAPI.patch(`/${id}`, updateData);
+  const response = await apiClient.patch(`${PREFIX}/${id}`, updateData);
   return response.data;
 };
 
-/**
- * DELETE /api/agents/:id
- * Admin removes an agent
- */
 export const deleteAgent = async (id) => {
-  const response = await agentAPI.delete(`/${id}`);
+  const response = await apiClient.delete(`${PREFIX}/${id}`);
   return response.data;
 };

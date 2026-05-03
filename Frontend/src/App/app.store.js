@@ -6,6 +6,9 @@ import messageReducer from "../features/message/state/message.slice";
 import agentReducer from "../features/agent/state/agent.slice";
 import companyReducer from "../features/company/state/company.slice";
 import userReducer from "../features/user/state/user.slice";
+import slaReducer from "../features/sla/state/sla.slice";
+import onboardingReducer from "../features/onboarding/state/onboarding.slice";
+import socketReducer from "../features/socket/state/socket.slice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +19,8 @@ export const store = configureStore({
     agent: agentReducer,
     company: companyReducer,
     user: userReducer,
+    sla: slaReducer,
+    onboarding: onboardingReducer,
+    socket: socketReducer,
   },
 });

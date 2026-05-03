@@ -1,78 +1,69 @@
-import axios from "axios";
+import apiClient from "../../../lib/axios";
 
-const companyAPI = axios.create({
-  baseURL: "/api/company",
-  withCredentials: true,
-});
+const PREFIX = "/company";
 
-/**
- * POST /api/company/register
- * Register a new company (admin only)
- */
 export const registerCompany = async (companyData) => {
-  const response = await companyAPI.post("/register", companyData);
+  const response = await apiClient.post(`${PREFIX}/register`, companyData);
   return response.data;
 };
 
-/**
- * GET /api/company/:id
- * Get a company by ID
- */
 export const getCompany = async (id) => {
-  const response = await companyAPI.get(`/${id}`);
+  const response = await apiClient.get(`${PREFIX}/${id}`);
   return response.data;
 };
 
-/**
- * PUT /api/company/:id
- * Update company details
- */
 export const updateCompany = async ({ id, ...updateData }) => {
-  const response = await companyAPI.put(`/${id}`, updateData);
+  const response = await apiClient.put(`${PREFIX}/${id}`, updateData);
   return response.data;
 };
 
-/**
- * DELETE /api/company/:id
- * Delete a company
- */
 export const deleteCompany = async (id) => {
-  const response = await companyAPI.delete(`/${id}`);
+  const response = await apiClient.delete(`${PREFIX}/${id}`);
   return response.data;
 };
 
-/**
- * GET /api/company/:companyId/users
- * Get all users belonging to a company
- */
 export const getCompanyUsers = async (companyId) => {
-  const response = await companyAPI.get(`/${companyId}/users`);
+  const response = await apiClient.get(`${PREFIX}/${companyId}/users`);
   return response.data;
 };
 
-/**
- * GET /api/company/:companyId/agents
- * Get all agents assigned to a company
- */
 export const getCompanyAgents = async (companyId) => {
-  const response = await companyAPI.get(`/${companyId}/agents`);
+  const response = await apiClient.get(`${PREFIX}/${companyId}/agents`);
   return response.data;
 };
 
-/**
- * GET /api/company/:companyId/tickets
- * Get all tickets raised under a company
- */
 export const getCompanyTickets = async (companyId) => {
-  const response = await companyAPI.get(`/${companyId}/tickets`);
+  const response = await apiClient.get(`${PREFIX}/${companyId}/tickets`);
   return response.data;
 };
 
-/**
- * GET /api/company/:companyId/messages
- * Get all messages under a company
- */
 export const getCompanyMessages = async (companyId) => {
-  const response = await companyAPI.get(`/${companyId}/messages`);
+  const response = await apiClient.get(`${PREFIX}/${companyId}/messages`);
+  return response.data;
+};
+
+// Workspaces (admin)
+export const createWorkspace = async (data) => {
+  const response = await apiClient.post(`/workspaces/create`, data);
+  return response.data;
+};
+
+export const getWorkspaces = async () => {
+  const response = await apiClient.get(`/workspaces/getAll`);
+  return response.data;
+};
+
+export const getWorkspace = async (id) => {
+  const response = await apiClient.get(`/workspaces/${id}`);
+  return response.data;
+};
+
+export const updateWorkspace = async ({ id, ...data }) => {
+  const response = await apiClient.patch(`/workspaces/${id}`, data);
+  return response.data;
+};
+
+export const deleteWorkspace = async (id) => {
+  const response = await apiClient.delete(`/workspaces/${id}`);
   return response.data;
 };

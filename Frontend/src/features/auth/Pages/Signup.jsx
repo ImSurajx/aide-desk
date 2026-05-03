@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import AuthLeftPanel from "../../../components/auth/AuthLeftPanel";
-import AuthTabToggle from "../../../components/auth/AuthTabToggle";
-import AuthFormField from "../../../components/auth/AuthFormField";
-import AuthDivider from "../../../components/auth/AuthDivider";
-import GoogleAuthButton from "../../../components/auth/GoogleAuthButton";
-import BackLink from "../../../components/auth/BackLink";
+import AuthLeftPanel from "../components/AuthLeftPanel";
+import AuthTabToggle from "../components/AuthTabToggle";
+import AuthFormField from "../components/AuthFormField";
+import AuthDivider from "../components/AuthDivider";
+import GoogleAuthButton from "../components/GoogleAuthButton";
+import BackLink from "../components/BackLink";
 import PageWrapper from "../../../App/Components/ui/PageWrapper";
 import { useAuth } from "../hooks/useAuth";
 

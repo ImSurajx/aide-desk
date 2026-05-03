@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import AuthLeftPanel from "../components/auth/AuthLeftPanel";
-import AuthFormField from "../components/auth/AuthFormField";
-import BackLink from "../components/auth/BackLink";
-import PageWrapper from "../App/Components/ui/PageWrapper";
-import Logo from "../components/ui/Logo";
-import { useAuth } from "../features/auth/hooks/useAuth";
+import AuthLeftPanel from "../components/AuthLeftPanel";
+import AuthFormField from "../components/AuthFormField";
+import BackLink from "../components/BackLink";
+import PageWrapper from "../../../App/Components/ui/PageWrapper";
+import Logo from "../../../components/ui/Logo";
+import { useAuth } from "../hooks/useAuth";
 
 const ForgotPassword = () => {
   const { forgotPassword } = useAuth();

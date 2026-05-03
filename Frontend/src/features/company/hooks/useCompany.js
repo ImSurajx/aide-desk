@@ -9,6 +9,11 @@ import {
   getCompanyAgents as getCompanyAgentsAPI,
   getCompanyTickets as getCompanyTicketsAPI,
   getCompanyMessages as getCompanyMessagesAPI,
+  createWorkspace as createWorkspaceAPI,
+  getWorkspaces as getWorkspacesAPI,
+  getWorkspace as getWorkspaceAPI,
+  updateWorkspace as updateWorkspaceAPI,
+  deleteWorkspace as deleteWorkspaceAPI,
 } from "../services/company.api";
 import {
   setCurrentCompany,
@@ -16,6 +21,9 @@ import {
   setCompanyAgents,
   setCompanyTickets,
   setCompanyMessages,
+  setWorkspaces,
+  addWorkspace,
+  setActiveWorkspaceId,
   setLoading,
   setError,
 } from "../state/company.slice";
@@ -28,6 +36,8 @@ export const useCompany = () => {
     companyAgents,
     companyTickets,
     companyMessages,
+    workspaces,
+    activeWorkspaceId,
     loading,
     error,
   } = useSelector((state) => state.company);
@@ -121,12 +131,55 @@ export const useCompany = () => {
     [dispatch]
   );
 
+  // Workspaces
+  const createWorkspace = useCallback(
+    async (data) => {
+      return handleRequest(createWorkspaceAPI, data, (res) => {
+        if (res?.data) dispatch(addWorkspace(res.data));
+      });
+    },
+    [dispatch]
+  );
+
+  const getWorkspaces = useCallback(async () => {
+    return handleRequest(getWorkspacesAPI, null, (res) => {
+      if (res?.data) {
+        dispatch(setWorkspaces(res.data));
+        if (res.data[0] && !activeWorkspaceId) {
+          dispatch(setActiveWorkspaceId(res.data[0]._id));
+        }
+      }
+    });
+  }, [dispatch, activeWorkspaceId]);
+
+  const getWorkspace = useCallback(
+    async (id) => handleRequest(getWorkspaceAPI, id),
+    [dispatch]
+  );
+
+  const updateWorkspace = useCallback(
+    async (data) => handleRequest(updateWorkspaceAPI, data),
+    [dispatch]
+  );
+
+  const deleteWorkspace = useCallback(
+    async (id) => handleRequest(deleteWorkspaceAPI, id),
+    [dispatch]
+  );
+
+  const switchWorkspace = useCallback(
+    (id) => dispatch(setActiveWorkspaceId(id)),
+    [dispatch]
+  );
+
   return {
     currentCompany,
     companyUsers,
     companyAgents,
     companyTickets,
     companyMessages,
+    workspaces,
+    activeWorkspaceId,
     loading,
     error,
     registerCompany,
@@ -137,5 +190,11 @@ export const useCompany = () => {
     getCompanyAgents,
     getCompanyTickets,
     getCompanyMessages,
+    createWorkspace,
+    getWorkspaces,
+    getWorkspace,
+    updateWorkspace,
+    deleteWorkspace,
+    switchWorkspace,
   };
 };

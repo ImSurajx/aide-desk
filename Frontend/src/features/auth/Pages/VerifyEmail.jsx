@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import PageWrapper from "../App/Components/ui/PageWrapper";
-import VerifyEmailCard from "../components/verify/VerifyEmailCard";
+import PageWrapper from "../../../App/Components/ui/PageWrapper";
+import VerifyEmailCard from "../components/VerifyEmailCard";
 import { motion } from "framer-motion";
 
 const VerifyEmail = () => {

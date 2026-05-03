@@ -1,18 +1,21 @@
 import { useState, useRef } from "react";
 
+const ACCEPT = "image/jpeg,image/png,image/webp,image/gif,application/pdf";
+
 const ChatInput = ({ onSend, disabled = false }) => {
   const [text, setText] = useState("");
+  const [attachment, setAttachment] = useState(null);
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const handleSend = () => {
     const trimmed = text.trim();
-    if (!trimmed || disabled) return;
-    onSend(trimmed);
+    if ((!trimmed && !attachment) || disabled) return;
+    onSend({ content: trimmed, attachment });
     setText("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    setAttachment(null);
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
   };
 
   const handleKeyDown = (e) => {
@@ -24,7 +27,6 @@ const ChatInput = ({ onSend, disabled = false }) => {
 
   const handleChange = (e) => {
     setText(e.target.value);
-    // Auto-grow
     const ta = textareaRef.current;
     if (ta) {
       ta.style.height = "auto";
@@ -32,12 +34,20 @@ const ChatInput = ({ onSend, disabled = false }) => {
     }
   };
 
-  const toolbarActions = [
-    { icon: "attach_file", label: "Attach file" },
-    { icon: "image", label: "Image" },
-    { icon: "emoji_emotions", label: "Emoji" },
-    { icon: "auto_awesome", label: "AI Assist" },
-  ];
+  const handleFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File too large. Max 10MB.");
+      return;
+    }
+    setAttachment(file);
+  };
+
+  const removeAttachment = () => {
+    setAttachment(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   return (
     <div
@@ -47,22 +57,45 @@ const ChatInput = ({ onSend, disabled = false }) => {
     >
       {/* Toolbar */}
       <div className="flex items-center gap-[2px] mb-[8px]">
-        {toolbarActions.map((a) => (
-          <button
-            key={a.icon}
-            title={a.label}
-            className={`p-[6px] rounded-lg transition-colors text-neutral-400 hover:text-black hover:bg-neutral-100 ${
-              a.icon === "auto_awesome"
-                ? "ml-auto bg-neutral-100 text-black"
-                : ""
-            }`}
-          >
-            <span className="material-symbols-outlined text-[18px]">
-              {a.icon}
-            </span>
-          </button>
-        ))}
+        <button
+          type="button"
+          title="Attach file"
+          onClick={() => fileInputRef.current?.click()}
+          className="p-[6px] rounded-lg transition-colors text-neutral-400 hover:text-black hover:bg-neutral-100"
+        >
+          <span className="material-symbols-outlined text-[18px]">
+            attach_file
+          </span>
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPT}
+          onChange={handleFile}
+          hidden
+        />
       </div>
+
+      {/* Attachment preview */}
+      {attachment && (
+        <div className="flex items-center gap-[10px] mb-[8px] px-[12px] py-[8px] bg-neutral-50 border border-neutral-200 rounded-lg">
+          <span className="material-symbols-outlined text-[18px] text-neutral-500">
+            {attachment.type.startsWith("image/") ? "image" : "picture_as_pdf"}
+          </span>
+          <span className="text-[12px] text-neutral-700 flex-1 truncate">
+            {attachment.name}
+          </span>
+          <span className="text-[11px] text-neutral-400">
+            {(attachment.size / 1024).toFixed(1)} KB
+          </span>
+          <button
+            onClick={removeAttachment}
+            className="p-[2px] rounded hover:bg-neutral-200 text-neutral-500"
+          >
+            <span className="material-symbols-outlined text-[16px]">close</span>
+          </button>
+        </div>
+      )}
 
       {/* Textarea */}
       <div
@@ -88,9 +121,9 @@ const ChatInput = ({ onSend, disabled = false }) => {
 
         <button
           onClick={handleSend}
-          disabled={!text.trim() || disabled}
+          disabled={(!text.trim() && !attachment) || disabled}
           className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
-            text.trim()
+            text.trim() || attachment
               ? "bg-black text-white hover:opacity-80 active:scale-95"
               : "bg-neutral-100 text-neutral-300 cursor-not-allowed"
           }`}

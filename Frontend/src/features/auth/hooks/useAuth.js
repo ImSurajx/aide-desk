@@ -61,15 +61,21 @@ export const useAuth = () => {
     }
   }
 
-  async function getMe() {
+  async function getMe({ silent = false } = {}) {
     try {
       dispatch(setLoading(true));
       const res = await getMeAPI();
       dispatch(setUser(res.data));
+      return res.data;
     } catch (error) {
-      dispatch(
-        setError(error.response?.data?.message || "Failed to fetch user"),
-      );
+      if (!silent) {
+        dispatch(
+          setError(error.response?.data?.message || "Failed to fetch user"),
+        );
+      } else {
+        dispatch(clearAuth());
+      }
+      throw error;
     } finally {
       dispatch(setLoading(false));
     }

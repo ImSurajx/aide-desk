@@ -1,4 +1,4 @@
-import Logo from '../ui/Logo';
+import Logo from '../../../components/ui/Logo';
 const AuthLeftPanel = () => {
   return (
     <div className="hidden lg:flex w-1/2 bg-surface-container-low flex-col justify-between p-[64px] border-r border-surface-variant relative overflow-hidden">

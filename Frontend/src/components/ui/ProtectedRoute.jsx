@@ -1,11 +1,24 @@
 import { Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, roles }) => {
   const location = useLocation();
-  const isVerified = location.state?.verified === true;
+  const { isAuthenticated, role, loading } = useSelector((state) => state.auth);
 
-  if (!isVerified) {
-    return <Navigate to="/signup" replace />;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-on-surface-variant text-sm">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (roles && roles.length && !roles.includes(role)) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import PageWrapper from "../App/Components/ui/PageWrapper";
+import PageWrapper from "../../../App/Components/ui/PageWrapper";
 
 const checks = ["Content added", "Personality set", "Ready for testing"];
 

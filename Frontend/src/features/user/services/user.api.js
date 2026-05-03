@@ -1,67 +1,64 @@
-import axios from "axios";
+import apiClient from "../../../lib/axios";
 
-const userAPI = axios.create({
-  baseURL: "/api/users",
-  withCredentials: true,
-});
+const PREFIX = "/users";
 
-// ─── Public Routes (Customer Login) ──────────────────────────────────────────
-
+// Customer auth
 export const loginUser = async (credentials) => {
-  const response = await userAPI.post("/login", credentials);
+  const response = await apiClient.post(`${PREFIX}/login`, credentials);
   return response.data;
 };
 
 export const logoutUser = async () => {
-  const response = await userAPI.post("/logout");
+  const response = await apiClient.post(`${PREFIX}/logout`);
   return response.data;
 };
 
 export const forgotUserPassword = async (emailData) => {
-  const response = await userAPI.post("/forgot-password", emailData);
+  const response = await apiClient.post(`${PREFIX}/forgot-password`, emailData);
   return response.data;
 };
 
 export const resetUserPassword = async ({ token, ...passwordData }) => {
-  const response = await userAPI.post(`/reset-password/${token}`, passwordData);
+  const response = await apiClient.post(
+    `${PREFIX}/reset-password/${token}`,
+    passwordData
+  );
   return response.data;
 };
 
-// ─── Customer Self-Service ───────────────────────────────────────────────────
-
+// Customer self-service
 export const getMe = async () => {
-  const response = await userAPI.get("/me");
+  const response = await apiClient.get(`${PREFIX}/me`);
   return response.data;
 };
 
 export const updateMe = async (updateData) => {
-  const response = await userAPI.patch("/me", updateData);
+  const response = await apiClient.patch(`${PREFIX}/me`, updateData);
   return response.data;
 };
 
 export const changeUserPassword = async (passwordData) => {
-  const response = await userAPI.patch("/me/password", passwordData);
+  const response = await apiClient.patch(`${PREFIX}/me/password`, passwordData);
   return response.data;
 };
 
-// ─── Admin Manages Customers ─────────────────────────────────────────────────
-
+// Admin → customers CRUD
 export const createUser = async (userData) => {
-  const response = await userAPI.post("/register", userData);
+  const response = await apiClient.post(`${PREFIX}/register`, userData);
   return response.data;
 };
 
 export const getUsers = async (params) => {
-  const response = await userAPI.get("/getAll", { params });
+  const response = await apiClient.get(`${PREFIX}/getAll`, { params });
   return response.data;
 };
 
 export const getUserById = async (id) => {
-  const response = await userAPI.get(`/${id}`);
+  const response = await apiClient.get(`${PREFIX}/${id}`);
   return response.data;
 };
 
 export const deleteUser = async (id) => {
-  const response = await userAPI.delete(`/remove/${id}`);
+  const response = await apiClient.delete(`${PREFIX}/remove/${id}`);
   return response.data;
 };

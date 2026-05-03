@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "../components/dashboard/Sidebar";
-import TopBar from "../components/dashboard/TopBar";
-import CustomerMetrics from "../components/customers/CustomerMetrics";
-import CustomerTabs from "../components/customers/CustomerTabs";
-import CustomerTable from "../components/customers/CustomerTable";
-import CustomerInsights from "../components/customers/CustomerInsights";
-import CreateCustomerModal from "../components/customers/CreateCustomerModal";
-import PageWrapper from "../App/Components/ui/PageWrapper";
+import Sidebar from "../../dashboard/components/Sidebar";
+import TopBar from "../../dashboard/components/TopBar";
+import CustomerMetrics from "../components/CustomerMetrics";
+import CustomerTabs from "../components/CustomerTabs";
+import CustomerTable from "../components/CustomerTable";
+import CustomerInsights from "../components/CustomerInsights";
+import CreateCustomerModal from "../components/CreateCustomerModal";
+import PageWrapper from "../../../App/Components/ui/PageWrapper";
 
 const Customers = () => {
   const [activeTab, setActiveTab] = useState("All Customers");

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "../components/dashboard/Sidebar";
-import TopBar from "../components/dashboard/TopBar";
-import TicketMetrics from "../components/tickets/TicketMetrics";
-import TicketTabs from "../components/tickets/TicketTabs";
-import TicketTable from "../components/tickets/TicketTable";
-import CreateTicketModal from "../components/tickets/CreateTicketModal";
-import PageWrapper from "../App/Components/ui/PageWrapper";
+import Sidebar from "../../dashboard/components/Sidebar";
+import TopBar from "../../dashboard/components/TopBar";
+import TicketMetrics from "../components/TicketMetrics";
+import TicketTabs from "../components/TicketTabs";
+import TicketTable from "../components/TicketTable";
+import CreateTicketModal from "../components/CreateTicketModal";
+import PageWrapper from "../../../App/Components/ui/PageWrapper";
 
 const Tickets = () => {
   const [activeTab, setActiveTab] = useState("All Tickets");

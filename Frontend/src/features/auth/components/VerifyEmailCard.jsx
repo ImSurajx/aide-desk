@@ -1,6 +1,6 @@
 import EmailProviderButton from "./EmailProviderButton";
 import { useLocation, useNavigate } from "react-router-dom"; // For dynamic email display and navigation
-import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 

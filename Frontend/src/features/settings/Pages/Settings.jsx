@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "../../../components/dashboard/Sidebar";
-import TopBar from "../../../components/dashboard/TopBar";
-import SettingsTabs from "../../../components/settings/SettingsTabs";
-import GeneralSection from "../../../components/settings/GeneralSection";
-import SecuritySection from "../../../components/settings/SecuritySection";
-import BillingSection from "../../../components/settings/BillingSection";
-import DangerZone from "../../../components/settings/DangerZone";
+import Sidebar from "../../dashboard/components/Sidebar";
+import TopBar from "../../dashboard/components/TopBar";
+import SettingsTabs from "../components/SettingsTabs";
+import GeneralSection from "../components/GeneralSection";
+import SecuritySection from "../components/SecuritySection";
+import BillingSection from "../components/BillingSection";
+import DangerZone from "../components/DangerZone";
 import PageWrapper from "../../../App/Components/ui/PageWrapper";
 
 const Settings = () => {

@@ -1,24 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import AuthLeftPanel from "../../../components/auth/AuthLeftPanel";
-import AuthTabToggle from "../../../components/auth/AuthTabToggle";
-import AuthFormField from "../../../components/auth/AuthFormField";
-import AuthDivider from "../../../components/auth/AuthDivider";
-import GoogleAuthButton from "../../../components/auth/GoogleAuthButton";
-import BackLink from "../../../components/auth/BackLink";
+import AuthLeftPanel from "../components/AuthLeftPanel";
+import AuthTabToggle from "../components/AuthTabToggle";
+import AuthFormField from "../components/AuthFormField";
+import AuthDivider from "../components/AuthDivider";
+import GoogleAuthButton from "../components/GoogleAuthButton";
+import BackLink from "../components/BackLink";
 import PageWrapper from "../../../App/Components/ui/PageWrapper";
 import Logo from "../../../components/ui/Logo";
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { handleLogin } = useAuth();
 
   const user = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
+
+  // Redirect when login resolves
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const from = location.state?.from?.pathname;
+    if (from) {
+      navigate(from, { replace: true });
+      return;
+    }
+    if (role === "customer") navigate("/dashboard/chat", { replace: true });
+    else navigate("/dashboard", { replace: true });
+  }, [isAuthenticated, role, navigate, location.state]);
 
   const [form, setForm] = useState({
     email: "",
@@ -44,9 +59,6 @@ const Login = () => {
 
     try {
       await handleLogin({ email: form.email, password: form.password });
-      if (!error) {
-        navigate("/dashboard");
-      }
     } catch (err) {
       console.error("Login failed", err);
     }

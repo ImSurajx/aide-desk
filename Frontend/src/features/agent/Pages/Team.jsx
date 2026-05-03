@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "../components/dashboard/Sidebar";
-import TopBar from "../components/dashboard/TopBar";
-import TeamMetrics from "../components/team/TeamMetrics";
-import TeamTable from "../components/team/TeamTable";
-import TeamCapacity from "../components/team/TeamCapacity";
-import AddAgentModal from "../components/team/AddAgentModal";
-import PageWrapper from "../App/Components/ui/PageWrapper";
+import Sidebar from "../../dashboard/components/Sidebar";
+import TopBar from "../../dashboard/components/TopBar";
+import TeamMetrics from "../components/TeamMetrics";
+import TeamTable from "../components/TeamTable";
+import TeamCapacity from "../components/TeamCapacity";
+import AddAgentModal from "../components/AddAgentModal";
+import PageWrapper from "../../../App/Components/ui/PageWrapper";
 
 const Team = () => {
   const [showModal, setShowModal] = useState(false);

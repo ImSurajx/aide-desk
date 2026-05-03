@@ -6,6 +6,7 @@ const initialState = {
   stats: null,
   loading: false,
   error: null,
+  ticketDraft: null, // { chatId, title, description, priority, ... } from copilot escalation
   pagination: {
     page: 1,
     limit: 20,
@@ -48,6 +49,12 @@ const chatSlice = createSlice({
     addChatToList: (state, action) => {
       state.chats.unshift(action.payload);
     },
+    setTicketDraft: (state, action) => {
+      state.ticketDraft = action.payload;
+    },
+    clearTicketDraft: (state) => {
+      state.ticketDraft = null;
+    },
   },
 });
 
@@ -59,6 +66,8 @@ export const {
   setError,
   updateChatInList,
   addChatToList,
+  setTicketDraft,
+  clearTicketDraft,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

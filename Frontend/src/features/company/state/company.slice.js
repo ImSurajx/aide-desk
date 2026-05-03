@@ -6,6 +6,8 @@ const initialState = {
   companyAgents: [],
   companyTickets: [],
   companyMessages: [],
+  workspaces: [],
+  activeWorkspaceId: null,
   loading: false,
   error: null,
 };
@@ -29,6 +31,15 @@ const companySlice = createSlice({
     setCompanyMessages: (state, action) => {
       state.companyMessages = action.payload;
     },
+    setWorkspaces: (state, action) => {
+      state.workspaces = action.payload;
+    },
+    addWorkspace: (state, action) => {
+      state.workspaces.push(action.payload);
+    },
+    setActiveWorkspaceId: (state, action) => {
+      state.activeWorkspaceId = action.payload;
+    },
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -44,6 +55,9 @@ export const {
   setCompanyAgents,
   setCompanyTickets,
   setCompanyMessages,
+  setWorkspaces,
+  addWorkspace,
+  setActiveWorkspaceId,
   setLoading,
   setError,
 } = companySlice.actions;

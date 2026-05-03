@@ -7,6 +7,8 @@ import {
   getChat as getChatAPI,
   assignAgent as assignAgentAPI,
   updateChatStatus as updateChatStatusAPI,
+  sendCopilotMessage as sendCopilotMessageAPI,
+  confirmTicket as confirmTicketAPI,
 } from "../services/chat.api";
 import {
   setChats,
@@ -16,13 +18,15 @@ import {
   setError,
   updateChatInList,
   addChatToList,
+  setTicketDraft,
+  clearTicketDraft,
 } from "../state/chat.slice";
+import { addMessage, setMessages } from "../../message/state/message.slice";
 
 export const useChat = () => {
   const dispatch = useDispatch();
-  const { chats, currentChat, stats, loading, error, pagination } = useSelector(
-    (state) => state.chat
-  );
+  const { chats, currentChat, stats, loading, error, ticketDraft, pagination } =
+    useSelector((state) => state.chat);
 
   const handleRequest = async (apiFunc, data = null, onSuccess = null) => {
     dispatch(setLoading(true));
@@ -68,7 +72,9 @@ export const useChat = () => {
   const getChat = useCallback(
     async (id) => {
       return handleRequest(getChatAPI, id, (res) => {
-        dispatch(setCurrentChat(res.data));
+        // Backend returns { chat, messages }
+        if (res?.data?.chat) dispatch(setCurrentChat(res.data.chat));
+        if (res?.data?.messages) dispatch(setMessages(res.data.messages));
       });
     },
     [dispatch]
@@ -92,12 +98,48 @@ export const useChat = () => {
     [dispatch]
   );
 
+  // Copilot pipeline: send message + handle resolved/escalate response
+  const sendCopilotMessage = useCallback(
+    async ({ chatId, content, attachment }) => {
+      return handleRequest(
+        sendCopilotMessageAPI,
+        { chatId, content, attachment },
+        (res) => {
+          if (res?.escalate && res?.ticketDraft) {
+            dispatch(setTicketDraft({ chatId, ...res.ticketDraft }));
+          } else if (res?.resolved && res?.message) {
+            dispatch(addMessage(res.message));
+          }
+        }
+      );
+    },
+    [dispatch]
+  );
+
+  const confirmTicket = useCallback(
+    async ({ chatId, ticketDraft: draft }) => {
+      return handleRequest(
+        confirmTicketAPI,
+        { chatId, ticketDraft: draft },
+        () => {
+          dispatch(clearTicketDraft());
+        }
+      );
+    },
+    [dispatch]
+  );
+
+  const cancelTicketDraft = useCallback(() => {
+    dispatch(clearTicketDraft());
+  }, [dispatch]);
+
   return {
     chats,
     currentChat,
     stats,
     loading,
     error,
+    ticketDraft,
     pagination,
     getChatStats,
     createChat,
@@ -105,5 +147,8 @@ export const useChat = () => {
     getChat,
     assignAgent,
     updateChatStatus,
+    sendCopilotMessage,
+    confirmTicket,
+    cancelTicketDraft,
   };
 };

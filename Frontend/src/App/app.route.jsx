@@ -16,7 +16,7 @@ import Docs from "../pages/Docs";
 import VerifyEmail from "../pages/VerifyEmail";
 import ProtectedRoute from "../components/ui/ProtectedRoute";
 import Onboarding from "../pages/Onboarding";
-
+import OnboardingSuccess from "../pages/OnboardingSuccess"; 
 
 const RootLayout = () => (
   <>
@@ -48,6 +48,14 @@ const AppRoutes = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Onboarding />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/onboarding/success",
+        element: (
+          <ProtectedRoute>
+            <OnboardingSuccess />
           </ProtectedRoute>
         ),
       },

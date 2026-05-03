@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import AuthLeftPanel from "../components/auth/AuthLeftPanel";
 import AuthTabToggle from "../components/auth/AuthTabToggle";
-import RoleSelector from "../components/auth/RoleSelector";
 import AuthFormField from "../components/auth/AuthFormField";
 import AuthDivider from "../components/auth/AuthDivider";
 import GoogleAuthButton from "../components/auth/GoogleAuthButton";
@@ -12,7 +11,6 @@ import PageWrapper from "../components/ui/PageWrapper";
 import Logo from "../components/ui/Logo";
 
 const Login = () => {
-  const [role, setRole] = useState("");
 
   return (
     <PageWrapper>
@@ -53,7 +51,6 @@ const Login = () => {
             </div>
 
             <div className="flex flex-col w-full">
-              <RoleSelector value={role} onChange={setRole} />
               <AuthFormField
                 id="email"
                 label="Email"

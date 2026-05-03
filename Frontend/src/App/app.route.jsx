@@ -13,6 +13,10 @@ import Integrations from "../pages/Integrations";
 import Product from "../pages/Product";
 import Demo from "../pages/Demo";
 import Docs from "../pages/Docs";
+import VerifyEmail from "../pages/VerifyEmail";
+import ProtectedRoute from "../components/ui/ProtectedRoute";
+import Onboarding from "../pages/Onboarding";
+import OnboardingSuccess from "../pages/OnboardingSuccess"; 
 
 const RootLayout = () => (
   <>
@@ -38,6 +42,23 @@ const AppRoutes = createBrowserRouter([
       { path: "/product", element: <Product /> },
       { path: "/demo", element: <Demo /> },
       { path: "/docs", element: <Docs /> },
+      { path: "/verify-email", element: <VerifyEmail /> },
+      {
+        path: "/onboarding",
+        element: (
+          <ProtectedRoute>
+            <Onboarding />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/onboarding/success",
+        element: (
+          <ProtectedRoute>
+            <OnboardingSuccess />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

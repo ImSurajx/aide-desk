@@ -8,6 +8,12 @@ const chatSchema = new mongoose.Schema(
       required: [true, 'Company is required']
     },
 
+    workspaceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'workspace',
+      required: [true, 'Workspace is required']
+    },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',

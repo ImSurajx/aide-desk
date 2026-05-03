@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import agentModel from '../models/aget.model.js';
 import companyModel from '../models/company.model.js';
+import workspaceModel from '../models/workSpace.model.js';
 import { HTTP_STATUS, ERROR_MESSAGES } from '../config/constants.js';
 import { AppError, asyncHandler } from '../utils/errorHandler.js';
 import { sendAgentInviteEmail } from '../utils/email.js';
@@ -54,6 +55,15 @@ export const createAgent = asyncHandler(async (req, res) => {
     throw new AppError('Company not found. Please contact support.', HTTP_STATUS.NOT_FOUND);
   }
 
+  // Guard: company must have a workspace before agents can be added
+  const workspace = await workspaceModel.findOne({ companyId: req.companyId, status: 'active' });
+  if (!workspace) {
+    throw new AppError(
+      'You must create a workspace before adding agents.',
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
   const tempPassword = generateAgentPassword(company.name);
 
   // Create agent — bcrypt pre-save hook hashes the password automatically
@@ -62,6 +72,7 @@ export const createAgent = asyncHandler(async (req, res) => {
     email,
     password: tempPassword,
     companyId: req.companyId,
+    workspaceId: workspace._id,
   });
 
   // Invite token — short-lived (7d), contains role so verifyEmailToken picks the right model
@@ -81,6 +92,7 @@ export const createAgent = asyncHandler(async (req, res) => {
     loginEmail: agent.email,
     tempPassword,   // plain-text password, sent before bcrypt hashes it in the DB
     verifyLink,
+    workspaceLoginUrl: `${config.FRONTEND_URL}/login?workspaceId=${workspace._id}`,
     frontendUrl: config.FRONTEND_URL,
   }).then((sent) => {
     console.log(
@@ -98,6 +110,7 @@ export const createAgent = asyncHandler(async (req, res) => {
       name: agent.name,
       email: agent.email,
       companyId: agent.companyId,
+      workspaceId: agent.workspaceId,
       status: agent.status,
       isVerified: agent.isVerified,
     },

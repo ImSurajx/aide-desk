@@ -1,10 +1,11 @@
 import { config } from '../config/config.js';
 import jwt from 'jsonwebtoken';
 
-// Generates the main auth access token and sets it in an httpOnly cookie
-export const generateToken = (res, userId, email, role, companyId = null) => {
+// Generates the main auth access token and sets it in an httpOnly cookie.
+// workspaceId is null for admins (they float across workspaces via x-workspace-id header).
+export const generateToken = (res, userId, email, role, companyId = null, workspaceId = null) => {
   const token = jwt.sign(
-    { userId, email, role, companyId },
+    { userId, email, role, companyId, workspaceId },
     config.JWT_SECRET,
     { expiresIn: config.JWT_EXPIRE || '5d' }
   );
@@ -12,9 +13,9 @@ export const generateToken = (res, userId, email, role, companyId = null) => {
   return token;
 };
 
-export const regenerateToken = (res, userId, email, role, companyId) => {
+export const regenerateToken = (res, userId, email, role, companyId, workspaceId = null) => {
   const token = jwt.sign(
-    { userId, email, role, companyId },
+    { userId, email, role, companyId, workspaceId },
     config.JWT_SECRET,
     { expiresIn: config.JWT_EXPIRE || '5d' }
   );

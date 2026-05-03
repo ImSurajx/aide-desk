@@ -38,6 +38,11 @@ export const protect = asyncHandler(async (req, res, next) => {
   req.userId = decoded.userId;
   req.role = decoded.role;
   req.companyId = decoded.companyId;
+  // Admin floats across workspaces — workspaceId comes from x-workspace-id header.
+  // Agents/customers have it locked in their JWT.
+  req.workspaceId = decoded.role === 'admin'
+    ? (req.headers['x-workspace-id'] || null)
+    : (decoded.workspaceId || null);
   next();
 });
 

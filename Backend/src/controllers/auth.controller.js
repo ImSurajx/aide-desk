@@ -184,7 +184,8 @@ export const loginController = asyncHandler(async (req, res) => {
     user._id,
     user.email,
     role,
-    user.companyId ?? null
+    user.companyId ?? null,
+    user.workspaceId ?? null   // null for admins
   );
 
   res.status(HTTP_STATUS.OK).json({
@@ -196,6 +197,7 @@ export const loginController = asyncHandler(async (req, res) => {
       fullName: user.fullName ?? user.name,
       role,
       companyId: user.companyId ?? null,
+      workspaceId: user.workspaceId ?? null,
       isVerified: user.isVerified
     },
     token

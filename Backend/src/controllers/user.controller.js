@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import userModel from '../models/user.model.js';
 import companyModel from '../models/company.model.js';
+import workspaceModel from '../models/workSpace.model.js';
 import { HTTP_STATUS, ERROR_MESSAGES } from '../config/constants.js';
 import { AppError, asyncHandler } from '../utils/errorHandler.js';
 import { generateToken, generateResetToken } from '../utils/tokens.js';
@@ -51,6 +52,15 @@ export const createUser = asyncHandler(async (req, res) => {
     throw new AppError('Company not found. Please contact support.', HTTP_STATUS.NOT_FOUND);
   }
 
+  // Guard: company must have a workspace before customers can be added
+  const workspace = await workspaceModel.findOne({ companyId: req.companyId, status: 'active' });
+  if (!workspace) {
+    throw new AppError(
+      'You must create a workspace before adding customers.',
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
   const tempPassword = generateUserPassword(company.name);
 
   const user = await userModel.create({
@@ -58,6 +68,7 @@ export const createUser = asyncHandler(async (req, res) => {
     email,
     password: tempPassword,
     companyId: req.companyId,
+    workspaceId: workspace._id,
   });
 
   sendCustomerInviteEmail({
@@ -66,7 +77,7 @@ export const createUser = asyncHandler(async (req, res) => {
     companyName: company.name,
     loginEmail: user.email,
     tempPassword,
-    loginUrl: `${config.FRONTEND_URL}/login`,
+    loginUrl: `${config.FRONTEND_URL}/login?workspaceId=${workspace._id}`,
     frontendUrl: config.FRONTEND_URL,
   }).then((sent) => {
     console.log(
@@ -110,7 +121,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   user.status = 'online';
   await user.save({ validateBeforeSave: false });
 
-  const token = generateToken(res, user._id, user.email, user.role, user.companyId);
+  const token = generateToken(res, user._id, user.email, user.role, user.companyId, user.workspaceId);
 
   res.status(HTTP_STATUS.OK).json({
     success: true,
@@ -121,6 +132,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       companyId: user.companyId,
+      workspaceId: user.workspaceId,
       profileImage: user.profileImage,
       status: user.status,
       lastLogin: user.lastLogin,

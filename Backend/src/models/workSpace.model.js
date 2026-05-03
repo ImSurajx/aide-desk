@@ -12,9 +12,16 @@ const workspaceSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: [true, 'Workspace slug is required'],
-      unique: [true, 'Workspace slug must be unique'],
+      unique: true,
       lowercase: true,
       trim: true
+    },
+
+    // The company this workspace belongs to
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'company',
+      required: [true, 'Company is required']
     },
 
     // Admin who created this workspace
@@ -24,10 +31,11 @@ const workspaceSchema = new mongoose.Schema(
       required: [true, 'Workspace owner is required']
     },
 
-    plan: {
+    description: {
       type: String,
-      enum: ['free', 'pro', 'enterprise'],
-      default: 'free'
+      trim: true,
+      maxlength: [200, 'Description cannot exceed 200 characters'],
+      default: ''
     },
 
     status: {
@@ -36,7 +44,6 @@ const workspaceSchema = new mongoose.Schema(
       default: 'active'
     },
 
-    // Per-tenant branding for the multi-tenant demo
     branding: {
       logo: { type: String, default: '' },
       primaryColor: { type: String, default: '#2563eb' }
@@ -48,7 +55,6 @@ const workspaceSchema = new mongoose.Schema(
       storageUsedMB: { type: Number, default: 0 }
     },
 
-    // Date when monthly usage counters reset
     resetDate: {
       type: Date,
       default: null

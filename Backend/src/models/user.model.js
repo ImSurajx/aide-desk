@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Company is required']
     },
 
+    workspaceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'workspace',
+      required: [true, 'Workspace is required']
+    },
+
     profileImage: {
       type: String,
       default: ''

@@ -16,7 +16,12 @@ import Docs from "../pages/Docs";
 import VerifyEmail from "../pages/VerifyEmail";
 import ProtectedRoute from "../components/ui/ProtectedRoute";
 import Onboarding from "../pages/Onboarding";
-import OnboardingSuccess from "../pages/OnboardingSuccess"; 
+import OnboardingSuccess from "../pages/OnboardingSuccess";
+import Dashboard from "../pages/Dashboard";
+import Customers from "../pages/Customers";
+import Tickets from "../pages/Tickets";
+import Team from "../pages/Team";
+import Settings from "../pages/Settings";
 
 const RootLayout = () => (
   <>
@@ -43,6 +48,11 @@ const AppRoutes = createBrowserRouter([
       { path: "/demo", element: <Demo /> },
       { path: "/docs", element: <Docs /> },
       { path: "/verify-email", element: <VerifyEmail /> },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/dashboard/customers", element: <Customers /> },
+      { path: "/dashboard/tickets", element: <Tickets /> },
+      { path: "/dashboard/team", element: <Team /> },
+      { path: "/dashboard/settings", element: <Settings /> },
       {
         path: "/onboarding",
         element: (

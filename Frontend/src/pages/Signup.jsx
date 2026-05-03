@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import AuthLeftPanel from "../components/auth/AuthLeftPanel";
 import AuthTabToggle from "../components/auth/AuthTabToggle";
@@ -16,40 +16,31 @@ const Signup = () => {
   const [form, setForm] = useState({
     fullName: "",
     email: "",
+    companyName: "",
     password: "",
     confirmPassword: "",
-    jobTitle: "",
   });
+
   const set = (field) => (e) =>
     setForm((f) => ({ ...f, [field]: e.target.value }));
 
   const validate = () => {
     const newErrors = {};
-
-    if (!form.email.includes("@") || !form.email.includes(".")) {
+    if (!form.email.includes("@") || !form.email.includes("."))
       newErrors.email = "Enter a valid email address";
-    }
-
-    if (form.password.length < 8) {
+    if (form.password.length < 8)
       newErrors.password = "Password must be at least 8 characters";
-    }
-
-    if (!/[A-Z]/.test(form.password)) {
+    if (!/[A-Z]/.test(form.password))
       newErrors.password =
         "Password must contain at least one uppercase letter";
-    }
-
-    if (!/[0-9]/.test(form.password)) {
+    if (!/[0-9]/.test(form.password))
       newErrors.password = "Password must contain at least one number";
-    }
-
-    if (form.password !== form.confirmPassword) {
+    if (form.password !== form.confirmPassword)
       newErrors.confirmPassword = "Passwords don't match";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   return (
     <PageWrapper>
       <div className="bg-surface-container-lowest text-primary antialiased min-h-screen flex selection:bg-primary selection:text-on-primary">
@@ -87,40 +78,16 @@ const Signup = () => {
                   {errors.email}
                 </p>
               )}
+
               <AuthFormField
-                id="password"
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                value={form.password}
-                onChange={set("password")}
-              />
-              {errors.password && (
-                <p className="text-[12px] text-error -mt-[12px]">
-                  {errors.password}
-                </p>
-              )}
-              <AuthFormField
-                id="confirmPassword"
-                label="Confirm Password"
-                type="password"
-                placeholder="••••••••"
-                value={form.confirmPassword}
-                onChange={set("confirmPassword")}
-              />
-              {errors.confirmPassword && (
-                <p className="text-[12px] text-error -mt-[12px]">
-                  {errors.confirmPassword}
-                </p>
-              )}
-              <AuthFormField
-                id="jobTitle"
-                label="Job Title"
+                id="companyName"
+                label="Company Name"
                 type="text"
-                placeholder="e.g. Head of Support"
-                value={form.jobTitle}
-                onChange={set("jobTitle")}
+                placeholder="Acme Inc."
+                value={form.companyName}
+                onChange={set("companyName")}
               />
+
               {/* Company Size */}
               <div className="flex flex-col gap-[8px]">
                 <label className="text-[12px] font-semibold uppercase tracking-widest text-on-surface-variant">
@@ -143,6 +110,34 @@ const Signup = () => {
                   ))}
                 </div>
               </div>
+
+              <AuthFormField
+                id="password"
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                value={form.password}
+                onChange={set("password")}
+              />
+              {errors.password && (
+                <p className="text-[12px] text-error -mt-[12px]">
+                  {errors.password}
+                </p>
+              )}
+
+              <AuthFormField
+                id="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                placeholder="••••••••"
+                value={form.confirmPassword}
+                onChange={set("confirmPassword")}
+              />
+              {errors.confirmPassword && (
+                <p className="text-[12px] text-error -mt-[12px]">
+                  {errors.confirmPassword}
+                </p>
+              )}
 
               <button
                 type="button"

@@ -1,0 +1,64 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  chats: [],
+  currentChat: null,
+  stats: null,
+  loading: false,
+  error: null,
+  pagination: {
+    page: 1,
+    limit: 20,
+    totalPages: 1,
+    totalChats: 0,
+  },
+};
+
+const chatSlice = createSlice({
+  name: "chat",
+  initialState,
+  reducers: {
+    setChats: (state, action) => {
+      state.chats = action.payload.chats || action.payload;
+      if (action.payload.pagination) {
+        state.pagination = action.payload.pagination;
+      }
+    },
+    setCurrentChat: (state, action) => {
+      state.currentChat = action.payload;
+    },
+    setStats: (state, action) => {
+      state.stats = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    updateChatInList: (state, action) => {
+      const index = state.chats.findIndex((c) => c._id === action.payload._id);
+      if (index !== -1) {
+        state.chats[index] = { ...state.chats[index], ...action.payload };
+      }
+      if (state.currentChat?._id === action.payload._id) {
+        state.currentChat = { ...state.currentChat, ...action.payload };
+      }
+    },
+    addChatToList: (state, action) => {
+      state.chats.unshift(action.payload);
+    },
+  },
+});
+
+export const {
+  setChats,
+  setCurrentChat,
+  setStats,
+  setLoading,
+  setError,
+  updateChatInList,
+  addChatToList,
+} = chatSlice.actions;
+
+export default chatSlice.reducer;

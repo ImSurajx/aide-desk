@@ -1,12 +1,42 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import AuthLeftPanel from "../components/auth/AuthLeftPanel";
 import AuthFormField from "../components/auth/AuthFormField";
 import BackLink from "../components/auth/BackLink";
-import PageWrapper from "../components/ui/PageWrapper";
+import PageWrapper from "../App/Components/ui/PageWrapper";
 import Logo from "../components/ui/Logo";
+import { useAuth } from "../features/auth/hooks/useAuth";
 
 const ForgotPassword = () => {
+  const { forgotPassword } = useAuth();
+  
+  const loading = useSelector((state) => state.auth.loading);
+  const apiError = useSelector((state) => state.auth.error);
+
+  const [email, setEmail] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSuccessMsg("");
+    setErrorMsg("");
+
+    if (!email) {
+      setErrorMsg("Email is required");
+      return;
+    }
+
+    try {
+      await forgotPassword(email);
+      setSuccessMsg("If that email is registered, a reset link has been sent.");
+    } catch (err) {
+      console.error("Forgot password failed", err);
+    }
+  };
+
   return (
     <PageWrapper>
       <div className="bg-background text-on-surface antialiased min-h-screen flex selection:bg-primary selection:text-on-primary">
@@ -44,22 +74,44 @@ const ForgotPassword = () => {
               </p>
             </div>
 
-            <div className="flex flex-col w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col w-full">
               <AuthFormField
                 id="email"
                 label="Email"
                 type="email"
                 placeholder="name@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
+              
+              {errorMsg && (
+                <p className="text-[12px] text-error -mt-[12px] mb-[12px]">
+                  {errorMsg}
+                </p>
+              )}
+
+              {apiError && (
+                <p className="text-[13px] text-error font-medium p-3 bg-error/10 rounded-lg mb-[16px]">
+                  {apiError}
+                </p>
+              )}
+
+              {successMsg && !apiError && (
+                <p className="text-[13px] text-green-600 font-medium p-3 bg-green-50 rounded-lg mb-[16px]">
+                  {successMsg}
+                </p>
+              )}
+
               <div className="mt-[16px]">
                 <button
                   type="submit"
-                  className="w-full h-12 bg-primary text-on-primary rounded-xl text-[14px] font-semibold hover:opacity-90 transition-opacity flex items-center justify-center"
+                  disabled={loading}
+                  className="w-full h-12 bg-primary text-on-primary rounded-xl text-[14px] font-semibold hover:opacity-90 transition-opacity flex items-center justify-center disabled:opacity-70"
                 >
-                  Send Reset Link
+                  {loading ? "Sending..." : "Send Reset Link"}
                 </button>
               </div>
-            </div>
+            </form>
 
             <div className="mt-[32px] text-center text-[13px] text-on-surface-variant">
               Remembered your password?{" "}

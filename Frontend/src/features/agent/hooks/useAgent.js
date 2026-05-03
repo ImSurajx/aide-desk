@@ -1,0 +1,122 @@
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateOwnStatus as updateOwnStatusAPI,
+  changePassword as changePasswordAPI,
+  createAgent as createAgentAPI,
+  getAgents as getAgentsAPI,
+  getAgent as getAgentAPI,
+  updateAgent as updateAgentAPI,
+  deleteAgent as deleteAgentAPI,
+} from "../services/agent.api";
+import {
+  setAgents,
+  setCurrentAgent,
+  setLoading,
+  setError,
+  updateAgentInList,
+  removeAgentFromList,
+} from "../state/agent.slice";
+
+export const useAgent = () => {
+  const dispatch = useDispatch();
+  const { agents, currentAgent, loading, error, pagination } = useSelector(
+    (state) => state.agent
+  );
+
+  const handleRequest = async (apiFunc, data = null, onSuccess = null) => {
+    dispatch(setLoading(true));
+    dispatch(setError(null));
+    try {
+      const response = await (data ? apiFunc(data) : apiFunc());
+      if (onSuccess) onSuccess(response);
+      return response;
+    } catch (err) {
+      dispatch(
+        setError(
+          err.response?.data?.message || err.message || "An error occurred"
+        )
+      );
+      throw err;
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const updateOwnStatus = useCallback(
+    async (statusData) => {
+      return handleRequest(updateOwnStatusAPI, statusData, (res) => {
+        // You might want to update the current auth user here if status is stored there
+        dispatch(updateAgentInList(res.data));
+      });
+    },
+    [dispatch]
+  );
+
+  const changePassword = useCallback(
+    async (data) => {
+      return handleRequest(changePasswordAPI, data);
+    },
+    [dispatch]
+  );
+
+  const createAgent = useCallback(
+    async (agentData) => {
+      return handleRequest(createAgentAPI, agentData, (res) => {
+        // Optionally fetch agents again or just rely on the response
+      });
+    },
+    [dispatch]
+  );
+
+  const getAgents = useCallback(
+    async (params) => {
+      return handleRequest(getAgentsAPI, params, (res) => {
+        dispatch(setAgents(res.data));
+      });
+    },
+    [dispatch]
+  );
+
+  const getAgent = useCallback(
+    async (id) => {
+      return handleRequest(getAgentAPI, id, (res) => {
+        dispatch(setCurrentAgent(res.data));
+      });
+    },
+    [dispatch]
+  );
+
+  const updateAgent = useCallback(
+    async (updateData) => {
+      return handleRequest(updateAgentAPI, updateData, (res) => {
+        dispatch(updateAgentInList(res.data));
+      });
+    },
+    [dispatch]
+  );
+
+  const deleteAgent = useCallback(
+    async (id) => {
+      return handleRequest(deleteAgentAPI, id, () => {
+        dispatch(removeAgentFromList(id));
+      });
+    },
+    [dispatch]
+  );
+
+  return {
+    agents,
+    currentAgent,
+    loading,
+    error,
+    pagination,
+    updateOwnStatus,
+    changePassword,
+    createAgent,
+    getAgents,
+    getAgent,
+    updateAgent,
+    deleteAgent,
+  };
+};

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import { motion } from "framer-motion";
 import AuthLeftPanel from "../components/auth/AuthLeftPanel";
 import AuthTabToggle from "../components/auth/AuthTabToggle";
@@ -10,6 +10,7 @@ import BackLink from "../components/auth/BackLink";
 import PageWrapper from "../components/ui/PageWrapper";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [companySize, setCompanySize] = useState("");
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
@@ -19,7 +20,6 @@ const Signup = () => {
     confirmPassword: "",
     jobTitle: "",
   });
-
   const set = (field) => (e) =>
     setForm((f) => ({ ...f, [field]: e.target.value }));
 
@@ -146,7 +146,10 @@ const Signup = () => {
 
               <button
                 type="button"
-                onClick={() => validate() && console.log("submit")}
+                onClick={() =>
+                  validate() &&
+                  navigate("/verify-email", { state: { email: form.email } })
+                }
                 className="w-full bg-primary text-on-primary rounded-xl py-3 text-[14px] font-semibold mt-4 hover:opacity-90 transition-opacity"
               >
                 Sign Up

@@ -13,6 +13,7 @@ import Integrations from "../pages/Integrations";
 import Product from "../pages/Product";
 import Demo from "../pages/Demo";
 import Docs from "../pages/Docs";
+import VerifyEmail from "../pages/VerifyEmail";
 
 const RootLayout = () => (
   <>
@@ -38,6 +39,7 @@ const AppRoutes = createBrowserRouter([
       { path: "/product", element: <Product /> },
       { path: "/demo", element: <Demo /> },
       { path: "/docs", element: <Docs /> },
+      { path: "/verify-email", element: <VerifyEmail /> },
     ],
   },
 ]);

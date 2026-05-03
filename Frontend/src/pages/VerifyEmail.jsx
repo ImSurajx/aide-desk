@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import PageWrapper from "../components/ui/PageWrapper";
+import PageWrapper from "../App/Components/ui/PageWrapper";
 import VerifyEmailCard from "../components/verify/VerifyEmailCard";
 import { motion } from "framer-motion";
 

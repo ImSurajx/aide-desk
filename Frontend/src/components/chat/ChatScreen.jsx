@@ -5,7 +5,7 @@ import TopBar from "../dashboard/TopBar";
 import ChatConversationList from "./ChatConversationList";
 import ChatWindow from "./ChatWindow";
 import ChatCustomerInfo from "./ChatCustomerInfo";
-import PageWrapper from "../ui/PageWrapper";
+import PageWrapper from "../../App/Components/ui/PageWrapper";
 
 const ChatScreen = () => {
   const [activeConversation, setActiveConversation] = useState(null);

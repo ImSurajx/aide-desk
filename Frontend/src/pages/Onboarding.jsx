@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
-import PageWrapper from "../components/ui/PageWrapper";
+import PageWrapper from "../App/Components/ui/PageWrapper";
 import OnboardingLayout from "../components/onboarding/OnboardingLayout";
 import Step1 from "../components/onboarding/Step1";
 import Step2 from "../components/onboarding/Step2";

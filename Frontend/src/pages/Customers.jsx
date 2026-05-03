@@ -7,7 +7,7 @@ import CustomerTabs from "../components/customers/CustomerTabs";
 import CustomerTable from "../components/customers/CustomerTable";
 import CustomerInsights from "../components/customers/CustomerInsights";
 import CreateCustomerModal from "../components/customers/CreateCustomerModal";
-import PageWrapper from "../components/ui/PageWrapper";
+import PageWrapper from "../App/Components/ui/PageWrapper";
 
 const Customers = () => {
   const [activeTab, setActiveTab] = useState("All Customers");

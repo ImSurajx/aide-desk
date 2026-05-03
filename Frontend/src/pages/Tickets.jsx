@@ -6,7 +6,7 @@ import TicketMetrics from "../components/tickets/TicketMetrics";
 import TicketTabs from "../components/tickets/TicketTabs";
 import TicketTable from "../components/tickets/TicketTable";
 import CreateTicketModal from "../components/tickets/CreateTicketModal";
-import PageWrapper from "../components/ui/PageWrapper";
+import PageWrapper from "../App/Components/ui/PageWrapper";
 
 const Tickets = () => {
   const [activeTab, setActiveTab] = useState("All Tickets");

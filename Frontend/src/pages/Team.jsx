@@ -6,7 +6,7 @@ import TeamMetrics from "../components/team/TeamMetrics";
 import TeamTable from "../components/team/TeamTable";
 import TeamCapacity from "../components/team/TeamCapacity";
 import AddAgentModal from "../components/team/AddAgentModal";
-import PageWrapper from "../components/ui/PageWrapper";
+import PageWrapper from "../App/Components/ui/PageWrapper";
 
 const Team = () => {
   const [showModal, setShowModal] = useState(false);

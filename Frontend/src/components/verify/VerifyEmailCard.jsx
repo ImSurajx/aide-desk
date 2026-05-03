@@ -1,5 +1,8 @@
 import EmailProviderButton from "./EmailProviderButton";
 import { useLocation, useNavigate } from "react-router-dom"; // For dynamic email display and navigation
+import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const providers = [
   { icon: "mail", label: "Open Gmail", href: "https://mail.google.com" },
@@ -18,9 +21,21 @@ const providers = [
 
 const VerifyEmailCard = ({ email = "user@example.com" }) => {
   const navigate = useNavigate();
+  const { resendVerification } = useAuth();
+  
+  const loading = useSelector((state) => state.auth.loading);
+  const apiError = useSelector((state) => state.auth.error);
 
-  const simulateVerification = () => {
-    navigate("/onboarding", { state: { verified: true, email } });
+  const [resendStatus, setResendStatus] = useState("");
+
+  const handleResend = async () => {
+    setResendStatus("");
+    try {
+      await resendVerification(email);
+      setResendStatus("Verification email sent. Please check your inbox.");
+    } catch (err) {
+      console.error("Resend failed", err);
+    }
   };
 
   return (
@@ -51,12 +66,32 @@ const VerifyEmailCard = ({ email = "user@example.com" }) => {
         ))}
       </div>
 
+      {/* API States */}
+      {apiError && (
+        <p className="text-[13px] text-error font-medium p-3 bg-error/10 rounded-lg mb-[16px] w-full text-center">
+          {apiError}
+        </p>
+      )}
+
+      {resendStatus && !apiError && (
+        <p className="text-[13px] text-green-600 font-medium p-3 bg-green-50 rounded-lg mb-[16px] w-full text-center">
+          {resendStatus}
+        </p>
+      )}
+
       {/* Secondary actions */}
       <div className="flex flex-col items-center gap-[8px] mb-[24px]">
-        <button className="text-[14px] text-on-surface-variant hover:text-primary hover:underline transition-all">
-          Resend email
+        <button 
+          onClick={handleResend}
+          disabled={loading}
+          className="text-[14px] text-on-surface-variant hover:text-primary hover:underline transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? "Sending..." : "Resend email"}
         </button>
-        <button className="text-[14px] text-on-surface-variant hover:text-primary hover:underline transition-all">
+        <button 
+          onClick={() => navigate("/signup")}
+          className="text-[14px] text-on-surface-variant hover:text-primary hover:underline transition-all"
+        >
           Change email
         </button>
       </div>
@@ -78,13 +113,6 @@ const VerifyEmailCard = ({ email = "user@example.com" }) => {
           Waiting for verification...
         </p>
       </div>
-      {/* TEMP — remove when real auth connected */}
-      <button
-        onClick={simulateVerification}
-        className="mt-[16px] text-[12px] text-on-surface-variant underline hover:text-primary transition-colors"
-      >
-        Simulate email verified →
-      </button>
     </main>
   );
 };

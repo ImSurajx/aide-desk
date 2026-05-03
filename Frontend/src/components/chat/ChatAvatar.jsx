@@ -1,0 +1,60 @@
+const statusColors = {
+  online: "bg-emerald-500",
+  away: "bg-amber-400",
+  offline: "bg-neutral-300",
+  busy: "bg-red-500",
+};
+
+const ChatAvatar = ({
+  name = "",
+  role = "agent",
+  status = "online",
+  size = "md",
+  showStatus = true,
+}) => {
+  const initials = name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  const isAI = role === "ai";
+  const isCustomer = role === "customer";
+
+  const sizes = {
+    sm: "w-7 h-7 text-[10px]",
+    md: "w-9 h-9 text-[12px]",
+    lg: "w-11 h-11 text-[13px]",
+  };
+
+  const dotSizes = {
+    sm: "w-2 h-2 border-[1.5px]",
+    md: "w-2.5 h-2.5 border-2",
+    lg: "w-3 h-3 border-2",
+  };
+
+  return (
+    <div className="relative shrink-0">
+      <div
+        className={`${sizes[size]} rounded-xl flex items-center justify-center font-bold select-none
+          ${isAI ? "bg-black text-white" : isCustomer ? "bg-neutral-800 text-white" : "bg-neutral-100 text-neutral-700 border border-neutral-200"}`}
+      >
+        {isAI ? (
+          <span className="material-symbols-outlined text-[15px]">
+            smart_toy
+          </span>
+        ) : (
+          initials
+        )}
+      </div>
+      {showStatus && !isAI && (
+        <span
+          className={`absolute -bottom-0.5 -right-0.5 rounded-full border-white ${dotSizes[size]} ${statusColors[status] || "bg-neutral-300"}`}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ChatAvatar;

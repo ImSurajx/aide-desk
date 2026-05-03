@@ -10,8 +10,11 @@ import authRoutes from './routes/auth.routes.js';
 import companyRoutes from './routes/company.routes.js';
 import agentRoutes from './routes/agent.routes.js';
 import userRoutes from './routes/user.routes.js';
-// import ticketRoutes from './routes/ticket.routes.js';
+import ticketRoutes from './routes/ticket.routes.js';
 import messageRoutes from './routes/message.routes.js';
+import chatRoutes from './routes/chat.routes.js';
+import slaRoutes from './routes/sla.routes.js';
+import workspaceRoutes from './routes/workspace.routes.js';
 
 // ============================================
 // Import Middleware & Error Handlers
@@ -93,8 +96,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/company', companyRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/users', userRoutes);
-// app.use('/api/tickets', ticketRoutes);
+app.use('/api/tickets', ticketRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/sla-config', slaRoutes);
+app.use('/api/workspaces', workspaceRoutes);
 
 // ============================================
 // Error Handling & 404

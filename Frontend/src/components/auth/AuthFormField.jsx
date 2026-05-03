@@ -1,4 +1,11 @@
-const AuthFormField = ({ id, label, type = "text", placeholder }) => {
+const AuthFormField = ({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+}) => {
   return (
     <div className="flex flex-col gap-[4px] mb-[16px]">
       <label
@@ -11,6 +18,8 @@ const AuthFormField = ({ id, label, type = "text", placeholder }) => {
         id={id}
         type={type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className="w-full h-12 bg-surface-container-low border border-surface-variant rounded-xl px-[16px] text-[14px] text-primary placeholder:text-on-tertiary-container focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
       />
     </div>

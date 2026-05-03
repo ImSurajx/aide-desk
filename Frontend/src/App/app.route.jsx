@@ -22,6 +22,7 @@ import Customers from "../pages/Customers";
 import Tickets from "../pages/Tickets";
 import Team from "../pages/Team";
 import Settings from "../pages/Settings";
+import ChatScreen from "../components/chat/ChatScreen";
 
 const RootLayout = () => (
   <>
@@ -53,6 +54,7 @@ const AppRoutes = createBrowserRouter([
       { path: "/dashboard/tickets", element: <Tickets /> },
       { path: "/dashboard/team", element: <Team /> },
       { path: "/dashboard/settings", element: <Settings /> },
+      { path: "/dashboard/chat", element: <ChatScreen /> },
       {
         path: "/onboarding",
         element: (

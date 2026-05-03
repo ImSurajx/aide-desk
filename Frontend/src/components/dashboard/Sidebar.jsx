@@ -5,6 +5,7 @@ const navItems = [
   { label: "Dashboard", icon: "dashboard", path: "/dashboard" },
   { label: "Customers", icon: "group", path: "/dashboard/customers" },
   { label: "Tickets", icon: "confirmation_number", path: "/dashboard/tickets" },
+  { label: "Chat", icon: "chat_bubble_outline", path: "/dashboard/chat" },
   { label: "Team", icon: "badge", path: "/dashboard/team" },
   { label: "Settings", icon: "settings", path: "/dashboard/settings" },
 ];

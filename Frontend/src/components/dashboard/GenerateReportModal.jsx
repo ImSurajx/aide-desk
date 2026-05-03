@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const reportTypes = [
   {
@@ -35,8 +36,19 @@ const GenerateReportModal = ({ onClose }) => {
   const [range, setRange] = useState("Last 30 days");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-black/40 backdrop-blur-sm">
-      <div className="max-w-[680px] w-full bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xl">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-black/40 backdrop-blur-sm"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.98 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="max-w-[680px] w-full bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xl"
+      >
         {/* Header */}
         <div className="px-[32px] py-[24px] border-b border-neutral-200 flex justify-between items-center">
           <div>
@@ -57,7 +69,12 @@ const GenerateReportModal = ({ onClose }) => {
           </button>
         </div>
 
-        <div className="p-[32px] space-y-[28px]">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08, duration: 0.25 }}
+          className="p-[32px] space-y-[28px]"
+        >
           {/* Report type */}
           <div className="flex flex-col gap-[12px]">
             <label className="text-[12px] font-semibold uppercase tracking-widest text-neutral-500">
@@ -76,18 +93,26 @@ const GenerateReportModal = ({ onClose }) => {
                   }`}
                 >
                   <span
-                    className={`material-symbols-outlined text-[22px] shrink-0 mt-0.5 ${selected === r.id ? "text-white" : "text-neutral-400"}`}
+                    className={`material-symbols-outlined text-[22px] shrink-0 mt-0.5 ${
+                      selected === r.id ? "text-white" : "text-neutral-400"
+                    }`}
                   >
                     {r.icon}
                   </span>
                   <div>
                     <p
-                      className={`text-[14px] font-semibold ${selected === r.id ? "text-white" : "text-black"}`}
+                      className={`text-[14px] font-semibold ${
+                        selected === r.id ? "text-white" : "text-black"
+                      }`}
                     >
                       {r.label}
                     </p>
                     <p
-                      className={`text-[12px] mt-0.5 ${selected === r.id ? "text-neutral-300" : "text-neutral-500"}`}
+                      className={`text-[12px] mt-0.5 ${
+                        selected === r.id
+                          ? "text-neutral-300"
+                          : "text-neutral-500"
+                      }`}
                     >
                       {r.desc}
                     </p>
@@ -168,7 +193,7 @@ const GenerateReportModal = ({ onClose }) => {
               arrow_forward
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Footer */}
         <div className="px-[32px] py-[24px] bg-neutral-50 border-t border-neutral-200 flex justify-end items-center gap-[16px]">
@@ -183,8 +208,8 @@ const GenerateReportModal = ({ onClose }) => {
             <span className="material-symbols-outlined text-sm">download</span>
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

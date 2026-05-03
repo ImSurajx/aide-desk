@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const permissions = [
   {
@@ -35,8 +36,19 @@ const AddAgentModal = ({ onClose }) => {
   const toggle = (id) => setPerms((prev) => ({ ...prev, [id]: !prev[id] }));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-black/40 backdrop-blur-sm">
-      <div className="max-w-[720px] w-full bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xl">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-black/40 backdrop-blur-sm"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.98 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="max-w-[720px] w-full bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xl"
+      >
         {/* Header */}
         <div className="px-[32px] py-[24px] border-b border-neutral-200 flex justify-between items-center">
           <div>
@@ -58,7 +70,12 @@ const AddAgentModal = ({ onClose }) => {
           </button>
         </div>
 
-        <div className="p-[32px] space-y-[32px]">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08, duration: 0.25 }}
+          className="p-[32px] space-y-[32px]"
+        >
           {/* Photo upload */}
           <div className="flex items-center gap-[24px]">
             <div className="h-[48px] w-[48px] rounded-full bg-neutral-100 border-2 border-dashed border-neutral-300 flex items-center justify-center text-neutral-400">
@@ -178,7 +195,7 @@ const AddAgentModal = ({ onClose }) => {
               expires in 48 hours.
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Footer */}
         <div className="px-[32px] py-[24px] bg-neutral-50 border-t border-neutral-200 flex justify-end items-center gap-[16px]">
@@ -193,8 +210,8 @@ const AddAgentModal = ({ onClose }) => {
             <span className="material-symbols-outlined text-sm">send</span>
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

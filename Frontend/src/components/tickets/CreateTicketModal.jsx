@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const priorities = ["Low", "Normal", "High"];
 
@@ -16,8 +17,19 @@ const CreateTicketModal = ({ onClose }) => {
   const [priority, setPriority] = useState("Normal");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-black/40 backdrop-blur-sm">
-      <div className="max-w-[840px] w-full bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xl">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-black/40 backdrop-blur-sm"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.98 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="max-w-[840px] w-full bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xl"
+      >
         {/* Header */}
         <div className="px-[32px] py-[24px] border-b border-neutral-200 flex justify-between items-center">
           <div>
@@ -40,7 +52,12 @@ const CreateTicketModal = ({ onClose }) => {
 
         <div className="flex">
           {/* Main form */}
-          <div className="flex-1 p-[32px] space-y-[24px] border-r border-neutral-200">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08, duration: 0.25 }}
+            className="flex-1 p-[32px] space-y-[24px] border-r border-neutral-200"
+          >
             <div className="grid grid-cols-2 gap-[24px]">
               {/* Customer search */}
               <div className="flex flex-col gap-[8px]">
@@ -141,10 +158,15 @@ const CreateTicketModal = ({ onClose }) => {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right sidebar */}
-          <aside className="w-64 bg-neutral-50 p-[16px] space-y-[24px]">
+          <motion.aside
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.12, duration: 0.25 }}
+            className="w-64 bg-neutral-50 p-[16px] space-y-[24px]"
+          >
             {/* Resources */}
             <div className="space-y-[12px]">
               <h2 className="text-[12px] font-semibold uppercase tracking-widest text-black border-b border-neutral-200 pb-2 flex items-center justify-between">
@@ -182,7 +204,9 @@ const CreateTicketModal = ({ onClose }) => {
                     className="relative pl-6 border-l border-neutral-200"
                   >
                     <div
-                      className={`absolute -left-[5px] top-1 w-2 h-2 rounded-full ${h.active ? "bg-black" : "bg-neutral-300"}`}
+                      className={`absolute -left-[5px] top-1 w-2 h-2 rounded-full ${
+                        h.active ? "bg-black" : "bg-neutral-300"
+                      }`}
                     />
                     <p className="text-[12px] font-semibold text-black">
                       {h.id}
@@ -194,7 +218,7 @@ const CreateTicketModal = ({ onClose }) => {
                 ))}
               </div>
             </div>
-          </aside>
+          </motion.aside>
         </div>
 
         {/* Footer */}
@@ -210,8 +234,8 @@ const CreateTicketModal = ({ onClose }) => {
             <span className="material-symbols-outlined text-sm">send</span>
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

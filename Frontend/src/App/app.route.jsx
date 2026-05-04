@@ -19,6 +19,12 @@ import Login from "../features/auth/Pages/Login";
 import Signup from "../features/auth/Pages/Signup";
 import ForgotPassword from "../features/auth/Pages/ForgotPassword";
 import VerifyEmail from "../features/auth/Pages/VerifyEmail";
+import WelcomePage from "../features/auth/Pages/WelcomePage";
+
+// Company portal (admin)
+import CompanyPortal from "../features/company/Pages/CompanyPortal";
+import CompanyPortalHome from "../features/company/Pages/CompanyPortalHome";
+import WorkspaceList from "../features/company/Pages/WorkspaceList";
 
 // Dashboard / app
 import Dashboard from "../features/dashboard/Pages/Dashboard";
@@ -39,7 +45,6 @@ const RootLayout = () => (
   </>
 );
 
-// Authenticated wrapper for any role
 const Authenticated = ({ children, roles }) => (
   <ProtectedRoute roles={roles}>{children}</ProtectedRoute>
 );
@@ -66,7 +71,40 @@ const AppRoutes = createBrowserRouter([
       { path: "/forgot-password", element: <ForgotPassword /> },
       { path: "/verify-email", element: <VerifyEmail /> },
 
-      // Admin/agent dashboard
+      // Welcome / company setup (admin, post-verification — no companyId yet)
+      { path: "/welcome", element: <WelcomePage /> },
+
+      // ── Company Portal (admin only) ──────────────────────────────────
+      {
+        path: "/company-portal",
+        element: (
+          <Authenticated roles={["admin"]}>
+            <CompanyPortal />
+          </Authenticated>
+        ),
+        children: [
+          { index: true, element: <CompanyPortalHome /> },
+          { path: "workspaces", element: <WorkspaceList /> },
+          {
+            path: "team",
+            element: (
+              <Authenticated roles={["admin"]}>
+                <Team />
+              </Authenticated>
+            ),
+          },
+          {
+            path: "settings",
+            element: (
+              <Authenticated roles={["admin"]}>
+                <Settings />
+              </Authenticated>
+            ),
+          },
+        ],
+      },
+
+      // ── Workspace Dashboard (admin entering workspace, agents, customers) ──
       {
         path: "/dashboard",
         element: (
@@ -116,7 +154,7 @@ const AppRoutes = createBrowserRouter([
         ),
       },
 
-      // Onboarding
+      // Onboarding (legacy — kept for backward compat)
       {
         path: "/onboarding",
         element: (

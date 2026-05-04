@@ -9,6 +9,7 @@ import userReducer from "../features/user/state/user.slice";
 import slaReducer from "../features/sla/state/sla.slice";
 import onboardingReducer from "../features/onboarding/state/onboarding.slice";
 import socketReducer from "../features/socket/state/socket.slice";
+import themeReducer from "../features/theme/state/theme.slice";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
     sla: slaReducer,
     onboarding: onboardingReducer,
     socket: socketReducer,
+    theme: themeReducer,
   },
 });

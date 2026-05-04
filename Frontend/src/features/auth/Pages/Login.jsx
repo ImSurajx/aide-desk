@@ -31,9 +31,19 @@ const Login = () => {
       navigate(from, { replace: true });
       return;
     }
-    if (role === "customer") navigate("/dashboard/chat", { replace: true });
-    else navigate("/dashboard", { replace: true });
-  }, [isAuthenticated, role, navigate, location.state]);
+    if (role === "customer") {
+      navigate("/dashboard/chat", { replace: true });
+    } else if (role === "agent") {
+      navigate("/dashboard", { replace: true });
+    } else if (role === "admin") {
+      // Admin with no company → onboarding wizard
+      if (!user?.companyId) {
+        navigate("/welcome", { replace: true });
+      } else {
+        navigate("/company-portal", { replace: true });
+      }
+    }
+  }, [isAuthenticated, role, user, navigate, location.state]);
 
   const [form, setForm] = useState({
     email: "",
@@ -75,11 +85,11 @@ const Login = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
         >
-          <div className="lg:hidden mb-[48px] self-start w-full max-w-[400px]">
+          <div className="lg:hidden mb-[48px] self-start w-full max-w-100">
             <Logo size="md" linkTo="/" />
           </div>
 
-          <div className="w-full max-w-[400px] flex flex-col">
+          <div className="w-full max-w-100 flex flex-col">
             <BackLink to="/" />
             <AuthTabToggle activeTab="login" />
 
@@ -95,7 +105,7 @@ const Login = () => {
                 Welcome back
               </h2>
               <p
-                className="text-on-surface-variant mt-[4px]"
+                className="text-on-surface-variant mt-1"
                 style={{ fontSize: "13px", lineHeight: "1.5" }}
               >
                 Enter your details to access your workspace.
@@ -112,7 +122,7 @@ const Login = () => {
                 onChange={set("email")}
               />
               {errors.email && (
-                <p className="text-[12px] text-error -mt-[12px] mb-[12px]">
+                <p className="text-[12px] text-error -mt-3 mb-3">
                   {errors.email}
                 </p>
               )}
@@ -126,7 +136,7 @@ const Login = () => {
                 onChange={set("password")}
               />
               {errors.password && (
-                <p className="text-[12px] text-error -mt-[12px] mb-[12px]">
+                <p className="text-[12px] text-error -mt-3 mb-3">
                   {errors.password}
                 </p>
               )}

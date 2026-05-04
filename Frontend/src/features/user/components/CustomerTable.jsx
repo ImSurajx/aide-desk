@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { SkeletonRow } from "../../../components/ui/Skeleton";
 
 const customers = [
   {
@@ -73,6 +75,7 @@ const Tag = ({ label, dark, error }) => {
 
 const CustomerTable = () => {
   const [page, setPage] = useState(1);
+  const loading = useSelector((s) => s.user.loading);
 
   return (
     <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-sm">
@@ -88,7 +91,15 @@ const CustomerTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-50">
-            {customers.map((c) => (
+            {loading
+              ? [...Array(5)].map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={6} className="px-0 py-0">
+                      <SkeletonRow />
+                    </td>
+                  </tr>
+                ))
+              : customers.map((c) => (
               <tr key={c.id} className="hover:bg-neutral-50/50 transition-colors group">
                 {/* Name */}
                 <td className="px-[24px] py-[16px]">

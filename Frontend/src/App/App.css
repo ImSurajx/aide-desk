@@ -92,6 +92,38 @@ body {
   font-family: "Poppins", sans-serif;
   background-color: #f9f9f9;
   color: #1b1b1b;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Dark Mode ─────────────────────────────────────── */
+.dark body {
+  background-color: #111111;
+  color: #e8e8e8;
+}
+
+.dark {
+  --color-surface-container-lowest: #111111;
+  --color-surface-container-low: #1a1a1a;
+  --color-surface-container: #1f1f1f;
+  --color-surface-container-high: #282828;
+  --color-surface-container-highest: #333333;
+  --color-surface: #111111;
+  --color-background: #111111;
+  --color-on-surface: #e8e8e8;
+  --color-on-background: #e8e8e8;
+  --color-primary: #ffffff;
+  --color-primary-container: #e8e8e8;
+  --color-on-primary: #111111;
+  --color-on-primary-container: #888888;
+  --color-secondary: #a0a0a0;
+  --color-on-secondary: #111111;
+  --color-surface-variant: #282828;
+  --color-on-surface-variant: #b0b0b0;
+  --color-outline: #555555;
+  --color-outline-variant: #333333;
+  --color-inverse-surface: #e8e8e8;
+  --color-inverse-on-surface: #1b1b1b;
+  --color-inverse-primary: #333333;
 }
 
 .depth-1 {

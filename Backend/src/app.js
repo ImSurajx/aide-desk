@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -25,6 +26,7 @@ import { errorHandler, notFoundHandler } from './utils/errorHandler.js';
 // Initialize Express App
 // ============================================
 const app = express();
+const __dirname = path.resolve();
 
 // ============================================
 // Middleware Configuration
@@ -62,6 +64,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -88,7 +91,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use((req, res) => {
+app.get('*name', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

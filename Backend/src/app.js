@@ -88,6 +88,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get('*name', (req, res) => {
+  res.sendFile('public/index.html', { root: __dirname });
+});
+
 // ============================================
 // API Routes
 // ============================================

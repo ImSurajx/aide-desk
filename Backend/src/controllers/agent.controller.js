@@ -126,6 +126,7 @@ export const getAgents = asyncHandler(async (req, res) => {
   const skip = (parseInt(page) - 1) * parseInt(limit);
 
   const filter = { companyId: req.companyId };
+  if (req.workspaceId) filter.workspaceId = req.workspaceId;
   if (status) filter.status = status;
 
   const [agents, total] = await Promise.all([

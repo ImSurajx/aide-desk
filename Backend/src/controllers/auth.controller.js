@@ -127,14 +127,8 @@ export const verifyEmailToken = async (req, res) => {
     );
   }
 
-  // Admin verification → render the HTML confirmation page
-  return res.status(HTTP_STATUS.OK).send(
-    getVerificationHTML(
-      'Account Verified!',
-      'Your email has been verified. You can now log in.',
-      true
-    )
-  );
+  // Admin verification → redirect to frontend welcome/setup wizard
+  return res.redirect(`${config.FRONTEND_URL}/welcome?verified=true`);
 };
 
 // ============================================
@@ -362,6 +356,7 @@ export const getMeController = asyncHandler(async (req, res) => {
       fullName: user.fullName ?? user.name,
       role: req.role,
       companyId: req.companyId ?? null,
+      workspaceId: user.workspaceId ?? null,
       isVerified: user.isVerified,
       profileImage: user.profileImage,
       status: user.status,

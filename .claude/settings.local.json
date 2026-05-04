@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(git -C \"e:\\\\Hackathon\\\\AideDesk\" status)"
-    ]
-  }
-}

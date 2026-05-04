@@ -20,6 +20,7 @@ import Signup from "../features/auth/Pages/Signup";
 import ForgotPassword from "../features/auth/Pages/ForgotPassword";
 import VerifyEmail from "../features/auth/Pages/VerifyEmail";
 import WelcomePage from "../features/auth/Pages/WelcomePage";
+import PublicRoute from "../features/auth/components/PublicRoute";
 
 // Company portal (admin)
 import CompanyPortal from "../features/company/Pages/CompanyPortal";
@@ -54,15 +55,36 @@ const AppRoutes = createBrowserRouter([
     element: <RootLayout />,
     children: [
       // Public marketing
-      { path: "/", element: <Home /> },
-      { path: "/platform", element: <Platform /> },
+      {
+        path: "/",
+        element: (
+          <PublicRoute>
+            <Home />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "/platform",
+        element: (
+          <PublicRoute>
+            <Platform />
+          </PublicRoute>
+        ),
+      },
       { path: "/pricing", element: <Pricing /> },
       { path: "/privacy", element: <Privacy /> },
       { path: "/solutions", element: <Solutions /> },
       { path: "/support", element: <Support /> },
       { path: "/integrations", element: <Integrations /> },
       { path: "/product", element: <Product /> },
-      { path: "/demo", element: <Demo /> },
+      {
+        path: "/demo",
+        element: (
+          <PublicRoute>
+            <Demo />
+          </PublicRoute>
+        ),
+      },
       { path: "/docs", element: <Docs /> },
 
       // Public auth

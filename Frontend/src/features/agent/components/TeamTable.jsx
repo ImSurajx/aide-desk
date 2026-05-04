@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import TeamFilter from "./TeamFilter";
 import TeamRow from "./TeamRow";
+import { SkeletonRow } from "../../../components/ui/Skeleton";
 
 const agents = [
   {
@@ -42,6 +44,7 @@ const agents = [
 const TeamTable = () => {
   const [filter, setFilter] = useState("All Agents");
   const [search, setSearch] = useState("");
+  const loading = useSelector((s) => s.agent.loading);
 
   const filtered = agents.filter((a) => {
     const matchStatus =
@@ -86,9 +89,15 @@ const TeamTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-100">
-            {filtered.map((a, i) => (
-              <TeamRow key={i} {...a} />
-            ))}
+            {loading
+              ? [...Array(5)].map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={6} className="px-0 py-0">
+                      <SkeletonRow />
+                    </td>
+                  </tr>
+                ))
+              : filtered.map((a, i) => <TeamRow key={i} {...a} />)}
           </tbody>
         </table>
       </div>

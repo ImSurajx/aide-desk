@@ -7,7 +7,9 @@ import RecentTicketsTable from "../components/RecentTicketsTable";
 import QuickActions from "../components/QuickActions";
 import GenerateReportModal from "../components/GenerateReportModal";
 import PageWrapper from "../../../App/Components/ui/PageWrapper";
+import { SkeletonCard } from "../../../components/ui/Skeleton";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 
 const kpis = [
@@ -43,6 +45,7 @@ const kpis = [
 
 const Dashboard = () => {
   const [showReport, setShowReport] = useState(false);
+  const companyLoading = useSelector((s) => s.company.loading);
 
   return (
     <PageWrapper>
@@ -86,9 +89,9 @@ const Dashboard = () => {
               transition={{ duration: 0.3, delay: 0.08, ease: "easeOut" }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[24px]"
             >
-              {kpis.map((k) => (
-                <KpiCard key={k.label} {...k} />
-              ))}
+              {companyLoading
+                ? [...Array(4)].map((_, i) => <SkeletonCard key={i} />)
+                : kpis.map((k) => <KpiCard key={k.label} {...k} />)}
             </motion.div>
 
             {/* Analytics */}
